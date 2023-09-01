@@ -1,9 +1,6 @@
 package com.inventage.keycloak.reenterpasswordauthenticator.infrastructure.resource;
 
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.jboss.logging.Logger;
@@ -20,7 +17,7 @@ public class ReenterPasswordResource {
     @Path("")
     @NoCache
     @Produces(MediaType.TEXT_HTML)
-    public Response activateOrder(@QueryParam("redirect_uri") URI redirectUri, @QueryParam("description") String description) {
+    public Response activateOrder(@QueryParam("redirect_uri") @Encoded URI redirectUri, @QueryParam("description") String description) {
         // TODO: check redirect uri
         // TODO: check if correct realm
 
@@ -57,7 +54,7 @@ public class ReenterPasswordResource {
              <script>
              
              function redirect(uri, description) {
-             	window.location.href = 'activate_order/redirect?redirect_uri=' + uri + '&description= ' + description;
+             	window.location.href = 'activate_order/redirect?redirect_uri=' + uri + '&signature= ' + description;
              }
 
              </script>
