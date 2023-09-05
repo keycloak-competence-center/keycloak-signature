@@ -12,6 +12,13 @@
 
     <artifactId>extension-order-activation</artifactId>
 
+    <properties>
+        <node.version>18.15.0</node.version>
+        <npm.version>9.5.0</npm.version>
+        <assets.source>${project.basedir}/src/main/web</assets.source>
+    </properties>
+
+
     <dependencies>
         <!-- Keycloak -->
         <dependency>
@@ -82,6 +89,82 @@
             </dependencies>
             <build>
                 <plugins>
+                    <plugin>
+                        <groupId>com.github.eirslett</groupId>
+                        <artifactId>frontend-maven-plugin</artifactId>
+                        <configuration>
+                            <workingDirectory>${assets.source}</workingDirectory>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>install-node</id>
+                                <goals>
+                                    <goal>install-node-and-npm</goal>
+                                </goals>
+                                <configuration>
+                                    <nodeVersion>v${node.version}</nodeVersion>
+                                    <npmVersion>${npm.version}</npmVersion>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>npm-dependencies</id>
+                                <goals>
+                                    <goal>npm</goal>
+                                </goals>
+                                <configuration>
+                                    <arguments>ci</arguments>
+                                </configuration>
+                            </execution>
+                            <!--                            <execution>-->
+                            <!--                                <id>npm-test</id>-->
+                            <!--                                <goals>-->
+                            <!--                                    <goal>npm</goal>-->
+                            <!--                                </goals>-->
+                            <!--                                <configuration>-->
+                            <!--                                    <arguments>test</arguments>-->
+                            <!--                                </configuration>-->
+                            <!--                            </execution>-->
+                            <execution>
+                                <id>npm-build</id>
+                                <goals>
+                                    <goal>npm</goal>
+                                </goals>
+                                <configuration>
+                                    <arguments>run build</arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                    <!-- substitute variables -->
+                    <artifactId>maven-resources-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>substitute-keycloak-files</id>
+                                <phase>generate-resources</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>src/main/resources/theme/signature/resources/js</outputDirectory>
+                                    <resources>
+                                        <resource>
+                                            <directory>${project.basedir}/src/main/web</directory>
+                                            <includes>
+                                                <include>keycloak-signature.bundled.js</include>
+                                            </includes>
+                                            <filtering>true</filtering>
+                                        </resource>
+                                    </resources>
+                                    <nonFilteredFileExtensions>
+                                        <nonFilteredFileExtension>pem</nonFilteredFileExtension>
+                                        <nonFilteredFileExtension>jks</nonFilteredFileExtension>
+                                        <nonFilteredFileExtension>jar</nonFilteredFileExtension>
+                                    </nonFilteredFileExtensions>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
                     <!-- deployment configuration for all extension modules -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -101,6 +184,7 @@
                             </execution>
                         </executions>
                     </plugin>
+
                 </plugins>
             </build>
         </profile>

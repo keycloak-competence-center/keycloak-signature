@@ -7,6 +7,8 @@ import org.jboss.logging.Logger;
 import org.jboss.resteasy.annotations.cache.NoCache;
 import org.keycloak.services.util.CacheControlUtil;
 
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.net.URI;
 
 public class ReenterPasswordResource {
@@ -17,24 +19,55 @@ public class ReenterPasswordResource {
     @Path("")
     @NoCache
     @Produces(MediaType.TEXT_HTML)
-    public Response activateOrder(@QueryParam("redirect_uri") @Encoded URI redirectUri, @QueryParam("description") String description) {
+    public Response getPage(@QueryParam("payload") String description) {
         // TODO: check redirect uri
         // TODO: check if correct realm
 
-        LOGGER.debugf("activateOrder");
-        final Response.ResponseBuilder responseBuilder = Response.ok(getHtmlPage(redirectUri.toString(), description)).cacheControl(CacheControlUtil.getDefaultCacheControl());
+        LOGGER.debugf("getPage");
+        final InputStream indexHtml = this.getClass().getClassLoader().getResourceAsStream("theme/signature/templates/index.html");
+        final Response.ResponseBuilder responseBuilder = Response.ok(indexHtml).cacheControl(CacheControlUtil.getDefaultCacheControl());
         return responseBuilder.build();
     }
 
     @GET
-    @Path("/redirect")
+    @Path("keycloak-signature.bundled.js")
     @NoCache
-    public Response redirect(@QueryParam("redirect_uri") URI redirectUri, @QueryParam("description") String description) {
+    @Produces("application/javascript")
+    public Response getKeycloakSignatureJSFile() {
+        // TODO: check redirect uri
+        // TODO: check if correct realm
+        // TODO: static content https://stackoverflow.com/questions/70714152/how-to-serve-static-files-from-file-system-with-quarkus
+
+        LOGGER.debugf("getKeycloakSignatureJSFile");
+        final InputStream indexHtml = this.getClass().getClassLoader().getResourceAsStream("theme/signature/resources/js/keycloak-signature.bundled.js");
+        final Response.ResponseBuilder responseBuilder = Response.ok(indexHtml).cacheControl(CacheControlUtil.getDefaultCacheControl());
+        return responseBuilder.build();
+    }
+
+    @POST
+    @Path("/sign")
+    @NoCache
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response sign(@HeaderParam("Content-Type") String contentType) {
         // TODO: check password
-        // TODO: sign description, ...
+        // TODO: sign payload, ...
+        // TODO: CORS
         LOGGER.debugf("activateOrder/redirect");
-        final String signedDescription = description; // TODO
-        final Response.ResponseBuilder responseBuilder = Response.status(302).header("signed-text", signedDescription).location(redirectUri);
+        LOGGER.debugf("activateOrder/redirect: " + contentType);
+        final String signedPayload = "{\"signedPayload\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c\"}";
+
+        final Response.ResponseBuilder responseBuilder = Response.ok().header("signature", signedPayload).entity(signedPayload);
+        return responseBuilder.build();
+    }
+
+    @OPTIONS
+    @Path("/sign")
+    @NoCache
+    public Response singOptions() {
+        // TODO: CORS
+        // TODO: Headers
+        final Response.ResponseBuilder responseBuilder = Response.ok();
         return responseBuilder.build();
     }
 
@@ -57,11 +90,11 @@ public class ReenterPasswordResource {
              	window.location.href = 'activate_order/redirect?redirect_uri=' + uri + '&signature= ' + description;
              }
 
-             </script>
-             </body>
-             </html>
-             
-            """,
+                         </script>
+                         </body>
+                         </html>
+                         
+                        """,
           description,
           redirectUri,
           description
