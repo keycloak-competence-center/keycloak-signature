@@ -78,6 +78,11 @@
                 <artifactId>auto-service-annotations</artifactId>
                 <version>${auto-service.version}</version>
             </dependency>
+            <dependency>
+                <groupId>io.vertx</groupId>
+                <artifactId>vertx-core</artifactId>
+                <version>4.4.5</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

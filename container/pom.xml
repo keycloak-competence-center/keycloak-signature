@@ -53,18 +53,18 @@
                             <outputDirectory>${project.build.outputDirectory}</outputDirectory>
                         </configuration>
                     </execution>
-                    <!-- for copying extension-no-op-authenticator -->
-                    <execution>
-                        <id>copy-providers</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>copy-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <includeArtifactIds>extension-no-op-authenticator,themes</includeArtifactIds>
-                            <outputDirectory>${project.build.outputDirectory}/keycloak/providers</outputDirectory>
-                        </configuration>
-                    </execution>
+<!--                    &lt;!&ndash; for copying extension-no-op-authenticator &ndash;&gt;-->
+<!--                    <execution>-->
+<!--                        <id>copy-providers</id>-->
+<!--                        <phase>package</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>copy-dependencies</goal>-->
+<!--                        </goals>-->
+<!--                        <configuration>-->
+<!--                            <includeArtifactIds>extension-no-op-authenticator,themes</includeArtifactIds>-->
+<!--                            <outputDirectory>${project.build.outputDirectory}/keycloak/providers</outputDirectory>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
                 </executions>
             </plugin>
             <!-- for variable substitution -->

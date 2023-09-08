@@ -18,9 +18,9 @@
     </properties>
 
     <modules>
-<!--        <module>extension-no-op-authenticator</module>-->
-<!--        <module>extension-no-op-protocol-mapper</module>-->
-        <module>extension-order-activation</module>
+        <module>extension-no-op-authenticator</module>
+        <module>extension-no-op-protocol-mapper</module>
+        <module>extension-signature</module>
     </modules>
 
     <build>
