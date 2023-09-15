@@ -24,8 +24,10 @@ export class KeycloakPage extends LitElement {
 
   override render() {
     return html`
-      <h1>Custom Element loaded</h1>
-      <slot @keycloak-signed-payload="${this.handleAcceptedEvent}"></slot>
+      <h1>Keycloak Page</h1>
+      <keycloak-signature @signed="${this.handleAcceptedEvent}" @rejected="${this.handleRejectedEvent}" @failure="${this.handleFailureEvent}" title="Overwritten Title" accept="Overwritten Accept" reject="Overwritten Reject">
+        <span>Overwritten Body<br/> <br/></span>
+      </keycloak-signature>
     `;
   }
 
@@ -37,8 +39,16 @@ export class KeycloakPage extends LitElement {
     // });
   }
 
-  handleAcceptedEvent(event: CustomEvent) {
-    console.log('Accepted custom event received with signed payload:', event.detail.signedPayload);
+  private handleAcceptedEvent(event: CustomEvent) {
+    console.log('Accepted custom event received:', event);
+  }
+
+  private handleRejectedEvent(event: CustomEvent) {
+    console.log('Rejected custom event received:', event);
+  }
+
+  private handleFailureEvent(event: CustomEvent) {
+    console.log('Failure custom event received:', event);
   }
 }
 

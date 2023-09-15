@@ -3,7 +3,7 @@
  * Copyright 2019 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
  */
-import { LitElement } from 'lit';
+import { LitElement, nothing } from 'lit';
 /**
  * An example element.
  *
@@ -18,9 +18,12 @@ export declare class KeycloakSignature extends LitElement {
     private titleText;
     private acceptText;
     private rejectText;
+    private maxNumberOfFailedAttempts;
+    private attemptIndex;
+    private lastSignCallResultedInAuthenticationFailed;
+    private messageToShow;
     private passwordInput?;
-    render(): import("lit-html").TemplateResult<1>;
-    firstUpdated(): void;
+    render(): import("lit-html").TemplateResult<1> | typeof nothing;
     private handleAcceptButtonClick;
     private handleRejectButtonClick;
     private createAndDispatchAcceptEvent;

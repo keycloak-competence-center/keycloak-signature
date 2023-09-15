@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-import {css, html, LitElement} from 'lit';
+import {css, html, LitElement, nothing} from 'lit';
 import {customElement, property, query} from 'lit/decorators.js';
 
 /**
@@ -29,7 +29,7 @@ export class KeycloakSignature extends LitElement {
   private signEndpoint = '/realms/master/signature-extension/sign';
 
   @property( {attribute: 'payload', type: String} )
-  private payload = "someValue";
+  private payload : string | undefined;
 
   @property( {attribute: 'title', type: String} )
   private titleText = 'Title';
@@ -40,17 +40,32 @@ export class KeycloakSignature extends LitElement {
   @property({attribute: 'reject', type: String})
   private rejectText = 'Reject';
 
+  private maxNumberOfFailedAttempts = 3;
+  private attemptIndex = 0;
+  private lastSignCallResultedInAuthenticationFailed = false
+
+  @property({attribute: false})
+  private messageToShow: string = "";
+
   @query("#passwordId")
   private passwordInput?: HTMLInputElement
 
   override render() {
+    if (!this.payload) {
+      console.warn("No valid payload provided.");
+      return nothing;
+    }
+
     return html`
       <p>
         <h1>${this.titleText}</h1>
         <slot>This is the body</slot>
         <label for="password">Password:</label>
-        <form>        
+        <form id="form">        
           <input type="password" id="passwordId" name="password"><br><br>
+          <p style="color:#FF0000">
+            ${this.messageToShow}
+          </p>
           <button type="submit" id="acceptButton" @click="${this.handleAcceptButtonClick}">${this.acceptText}</button>
         </form>
         <button id="rejectButton" @click="${this.handleRejectButtonClick}">${this.rejectText}</button>
@@ -58,51 +73,64 @@ export class KeycloakSignature extends LitElement {
     `;
   }
 
-  override firstUpdated() {
-    const rejectButton = this.shadowRoot!.getElementById('rejectButton');
-
-    rejectButton!.addEventListener('click', () => {
-      console.log('Reject Button pressed');
-    });
-  }
-
   private async handleAcceptButtonClick(event: Event) {
     event.preventDefault();
-    console.log("handleAcceptButtonClick: ")
-    try {
-      // const url = '/realms/koerber/activate_order/sign?redirect_uri=http%3A%2F%2Fgoogle.com%3Ftest1%3D1%26test2%3D2&description=this_is_an_order'; // Replace with your API endpoint
-      const url = this.signEndpoint;
-      const data = {
-        // Define the data you want to send in the request body
-        payload: this.payload,
-        credentials: {password : this.passwordInput?.value},
-      };
 
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
-
-      if (response.ok) {
-        console.log('POST request successful');
-        console.log("headers: ", response.headers)
-        const bodyJson = await response.json();
-        console.log("JWT: ", bodyJson.signedPayload);
-
-        this.createAndDispatchAcceptEvent(bodyJson)
-        console.log("event dispatched: ");
-      } else if (response.status === 401) {
-        this.createAndDispatchFailureEvent("Failure during Signing: Authentication of user failed.")
-      } else {
-        console.error('POST request failed');
-        this.createAndDispatchFailureEvent("Failure during Signing: Unexpected failure happened. Status response of Keycloak is: " + response.statusText);
+    if (this.attemptIndex >= this.maxNumberOfFailedAttempts) {
+      this.messageToShow = "Number of authentication attempts exceeded";
+      if (this.lastSignCallResultedInAuthenticationFailed) {
+        this.createAndDispatchFailureEvent("Failure during Signing: Authentication did not work. ");
       }
-    } catch (error) {
-      console.error('Error:', error);
+      return;
     }
+
+    console.log("handleAcceptButtonClick: ")
+     try {
+        // const url = '/realms/koerber/activate_order/sign?redirect_uri=http%3A%2F%2Fgoogle.com%3Ftest1%3D1%26test2%3D2&description=this_is_an_order'; // Replace with your API endpoint
+        const url = this.signEndpoint;
+        const data = {
+          // Define the data you want to send in the request body
+          payload: this.payload,
+          credentials: {password : this.passwordInput?.value},
+        };
+
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        });
+
+
+        if (response.ok) {
+          console.log('POST request successful');
+          const bodyJson = await response.json();
+
+          this.lastSignCallResultedInAuthenticationFailed = false;
+          this.attemptIndex = this.maxNumberOfFailedAttempts;
+          this.createAndDispatchAcceptEvent(bodyJson)
+        } else if (response.status === 403) {
+          console.log('403: authentication failed', this.attemptIndex);
+          this.messageToShow = "Wrong password";
+          this.lastSignCallResultedInAuthenticationFailed = true;
+          this.attemptIndex++;
+        } else {
+          console.error('POST request failed');
+          this.messageToShow = "Something unexpected happened";
+          this.lastSignCallResultedInAuthenticationFailed = false;
+          this.attemptIndex = this.maxNumberOfFailedAttempts;
+          this.createAndDispatchFailureEvent("Failure during Signing: Unexpected failure happened. Status response of Keycloak is: " + response.statusText);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        this.messageToShow = "Something unexpected happened";
+        this.lastSignCallResultedInAuthenticationFailed = false;
+        this.attemptIndex = this.maxNumberOfFailedAttempts;
+        this.createAndDispatchFailureEvent("Failure during Signing: Unexpected failure happened: : " + error);
+      }
+
+      this.passwordInput!.value = '';
   }
 
   private handleRejectButtonClick() {
@@ -110,6 +138,7 @@ export class KeycloakSignature extends LitElement {
 
     this.createAndDispatchRejectEvent()
   }
+
 
   private createAndDispatchAcceptEvent(bodyJson: Record<string, string>) {
     const eventSignedPayloadReceived = new CustomEvent('signed', {
@@ -137,9 +166,6 @@ export class KeycloakSignature extends LitElement {
 
   private createAndDispatchRejectEvent() {
     const eventRejected = new CustomEvent('rejected', {
-      detail: {
-        message: "Signing Process has been rejected"
-      },
       bubbles: false,
       composed: false
     });

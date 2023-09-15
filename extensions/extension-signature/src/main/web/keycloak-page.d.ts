@@ -12,7 +12,9 @@ export declare class KeycloakPage extends LitElement {
     static styles: import("lit").CSSResult;
     render(): import("lit-html").TemplateResult<1>;
     firstUpdated(): void;
-    handleAcceptedEvent(event: CustomEvent): void;
+    private handleAcceptedEvent;
+    private handleRejectedEvent;
+    private handleFailureEvent;
 }
 declare global {
     interface HTMLElementTagNameMap {

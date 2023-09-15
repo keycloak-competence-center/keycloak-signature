@@ -18,8 +18,10 @@ import { customElement } from 'lit/decorators.js';
 let KeycloakPage = class KeycloakPage extends LitElement {
     render() {
         return html `
-      <h1>Custom Element loaded</h1>
-      <slot @keycloak-signed-payload="${this.handleAcceptedEvent}"></slot>
+      <h1>Keycloak Page</h1>
+      <keycloak-signature @signed="${this.handleAcceptedEvent}" @rejected="${this.handleRejectedEvent}" @failure="${this.handleFailureEvent}" title="Overwritten Title" accept="Overwritten Accept" reject="Overwritten Reject">
+        <span>Overwritten Body<br/> <br/></span>
+      </keycloak-signature>
     `;
     }
     firstUpdated() {
@@ -30,7 +32,13 @@ let KeycloakPage = class KeycloakPage extends LitElement {
         // });
     }
     handleAcceptedEvent(event) {
-        console.log('Accepted custom event received with signed payload:', event.detail.signedPayload);
+        console.log('Accepted custom event received:', event);
+    }
+    handleRejectedEvent(event) {
+        console.log('Rejected custom event received:', event);
+    }
+    handleFailureEvent(event) {
+        console.log('Failure custom event received:', event);
     }
 };
 KeycloakPage.styles = css `

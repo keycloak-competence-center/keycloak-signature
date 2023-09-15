@@ -7,7 +7,7 @@
     <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
     <script src="../node_modules/lit/polyfill-support.js"></script>
     <script type="module" src="../my-element.js"></script>
-    <script type="module" src="../test-element.js"></script>
+    <script type="module" src="../keycloak-page.js"></script>
     <script type="module" src="../keycloak-signature.js"></script>
     <style>
       p {
@@ -17,10 +17,6 @@
     </style>
   </head>
   <body>
-    <keycloak-page>
-      <keycloak-signature payload='overwritten payload' title="Overwritten Title" accept="Overwritten Accept" reject="Overwritten Reject">
-        <span>Overwritten Body<br/> <br/></span>
-      </keycloak-signature>
-    </keycloak-page>
+    <keycloak-page></keycloak-page>
   </body>
 </html>

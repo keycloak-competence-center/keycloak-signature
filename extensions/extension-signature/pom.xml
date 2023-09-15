@@ -109,15 +109,15 @@
                                     <npmVersion>${npm.version}</npmVersion>
                                 </configuration>
                             </execution>
-                            <execution>
-                                <id>npm-dependencies</id>
-                                <goals>
-                                    <goal>npm</goal>
-                                </goals>
-                                <configuration>
-                                    <arguments>ci</arguments>
-                                </configuration>
-                            </execution>
+<!--                            <execution>-->
+<!--                                <id>npm-dependencies</id>-->
+<!--                                <goals>-->
+<!--                                    <goal>npm</goal>-->
+<!--                                </goals>-->
+<!--                                <configuration>-->
+<!--                                    <arguments>ci</arguments>-->
+<!--                                </configuration>-->
+<!--                            </execution>-->
                             <!--                            <execution>-->
                             <!--                                <id>npm-test</id>-->
                             <!--                                <goals>-->
@@ -127,15 +127,15 @@
                             <!--                                    <arguments>test</arguments>-->
                             <!--                                </configuration>-->
                             <!--                            </execution>-->
-                            <execution>
-                                <id>npm-build</id>
-                                <goals>
-                                    <goal>npm</goal>
-                                </goals>
-                                <configuration>
-                                    <arguments>run build</arguments>
-                                </configuration>
-                            </execution>
+<!--                            <execution>-->
+<!--                                <id>npm-build</id>-->
+<!--                                <goals>-->
+<!--                                    <goal>npm</goal>-->
+<!--                                </goals>-->
+<!--                                <configuration>-->
+<!--                                    <arguments>run build</arguments>-->
+<!--                                </configuration>-->
+<!--                            </execution>-->
                         </executions>
                     </plugin>
                     <plugin>
