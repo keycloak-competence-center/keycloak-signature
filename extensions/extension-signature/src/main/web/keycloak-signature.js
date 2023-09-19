@@ -32,7 +32,7 @@ let KeycloakSignature = class KeycloakSignature extends LitElement {
     }
     render() {
         if (!this.payload) {
-            console.warn("hello jabba");
+            console.warn("No valid payload provided.");
             return nothing;
         }
         return html `

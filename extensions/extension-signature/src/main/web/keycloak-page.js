@@ -19,7 +19,7 @@ let KeycloakPage = class KeycloakPage extends LitElement {
     render() {
         return html `
       <h1>Keycloak Page</h1>
-      <keycloak-signature @signed="${this.handleAcceptedEvent}" @rejected="${this.handleRejectedEvent}" @failure="${this.handleFailureEvent}" title="Overwritten Title" accept="Overwritten Accept" reject="Overwritten Reject">
+      <keycloak-signature @signed="${this.handleAcceptedEvent}" @rejected="${this.handleRejectedEvent}" @failure="${this.handleFailureEvent}" payload="overwritten payload" title="Overwritten Title" accept="Overwritten Accept" reject="Overwritten Reject">
         <span>Overwritten Body<br/> <br/></span>
       </keycloak-signature>
     `;
