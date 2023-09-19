@@ -1,0 +1,42 @@
+name: Github Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      releaseVersion:
+        description: "Default version to use when preparing a release."
+        required: true
+        default: "X.Y.Z"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Update POM version with date, build number and commit hash
+        run: |
+          version_with_snapshot=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          version_number=$(echo "${version_with_snapshot}" | sed 's/SNAPSHOT//g')
+          date=$(date -u +%Y%m%d%H%M)
+          final_version=${version_number}${date}-${{github.run_number}}-${GITHUB_SHA::8}
+          mvn versions:set -DnewVersion=${final_version}
+      - name: Build with Maven
+        run: mvn -B package -P github --file extensions/extension-signature/pom.xml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Release to GitHub releases
+        uses: softprops/action-gh-release@v1
+        with:
+          files: "extensions/extension-signature/target/extension-*.jar"
+          body_path: "CHANGELOG.md"
+          fail_on_unmatched_files: true
+          tag_name: ${{ github.event.inputs.releaseVersion }}
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
