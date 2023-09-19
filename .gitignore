@@ -23,3 +23,6 @@ release.properties
 
 # Postgres data
 /docker-compose/postgres/volume/
+
+# ASDF
+.tool-versions
