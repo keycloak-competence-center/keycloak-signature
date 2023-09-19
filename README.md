@@ -1,5 +1,34 @@
-Keycloak-Custom
+Keycloak Signature Extension
 ===============
+
+![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/inventage/keycloak-signature-extension?sort=semver)
+![Keycloak Dependency Version](https://img.shields.io/badge/Keycloak-22.0.1-blue)
+![GitHub Release Date](https://img.shields.io/github/release-date-pre/inventage/keycloak-signature-extension)
+![Github Last Commit](https://img.shields.io/github/last-commit/inventage/keycloak-signature-extension)
+
+![CI build](https://github.com/inventage/keycloak-signature-extension/actions/workflows/build-pipeline.yml/badge.svg)
+![open issues](https://img.shields.io/github/issues/inventage/keycloak-signature-extension)
+
+## What is it good for?
+
+The Keycloak Signature Extension gives Keycloak the ability to sign any values, after the user has "re-authenticated" himself. If the credentials are valid, Keycloak will return a signed JWT including the payload.
+
+## Implementation Variants
+
+This extension can be used in 3 different ways:
+
+- **[Keycloak Sign Endpoint](#1-Keycloak-Sign-Endpoint)**: the minimal way is sending the necessary data to the sign endpoint.
+- **[Custom Element](#2-Custom-Element)**: Using `<keycloak-signature>` web components which calls the POST [Keycloak Sign Endpoint](#1-Keycloak-Sign-Endpoint).
+- **[Keycloak Page](#3-Keycloak-Page)**: Integrates the `<keycloak-signature>` [custom element](#2-Custom-Element) to provide signing functionality.
+
+Have a look at the [specification](./SPECIFICATION.md) for more detailed information about composition and configuration.
+
+## Installation
+
+This extension can be downloaded as a Java Archive (jar) and can simply be placed in the
+providers directory of your Keycloak.
+
+## Development
 
 This project creates a custom [Keycloak] server based on [Keycloak.X]. It is structured as a multi-module Maven build and contains the following top-level modules:
 
@@ -12,8 +41,6 @@ This project creates a custom [Keycloak] server based on [Keycloak.X]. It is str
 
 Please see the tutorial [building a custom Keycloak container image](https://keycloak.ch/keycloak-tutorials/tutorial-custom-keycloak/) for the details of this project.
 
-## Developing
-
 ### Requirements
 
 - Node
@@ -23,6 +50,16 @@ Please see the tutorial [building a custom Keycloak container image](https://key
 ### Getting Started
 
 TODO
+
+## Sponsors
+
+[koerber](https://koerber-pharma.com)
+
+## Support
+
+For more support for this extension or your Keycloak project in general have a look
+at [keycloak.ch](https://keycloak.ch)
+
 
 [Keycloak]: https://keycloak.org
 [Keycloak.X]: https://www.keycloak.org/migration/migrating-to-quarkus
