@@ -18,7 +18,7 @@ export declare class KeycloakSignature extends LitElement {
     private titleText;
     private acceptText;
     private rejectText;
-    private maxNumberOfFailedAttempts;
+    private maxNrOfAuthAttempts;
     private attemptIndex;
     private lastSignCallResultedInAuthenticationFailed;
     private messageToShow;

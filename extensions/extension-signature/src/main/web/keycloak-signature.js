@@ -25,12 +25,13 @@ let KeycloakSignature = class KeycloakSignature extends LitElement {
         this.titleText = 'Title';
         this.acceptText = 'Accept';
         this.rejectText = 'Reject';
-        this.maxNumberOfFailedAttempts = 3;
-        this.attemptIndex = 0;
+        this.maxNrOfAuthAttempts = 3;
+        this.attemptIndex = 1;
         this.lastSignCallResultedInAuthenticationFailed = false;
         this.messageToShow = "";
     }
     render() {
+        console.log("attempts: ", this.maxNrOfAuthAttempts);
         if (!this.payload) {
             console.warn("No valid payload provided.");
             return nothing;
@@ -54,7 +55,8 @@ let KeycloakSignature = class KeycloakSignature extends LitElement {
     async handleAcceptButtonClick(event) {
         var _a;
         event.preventDefault();
-        if (this.attemptIndex >= this.maxNumberOfFailedAttempts) {
+        console.log("maxNrOfAuthAttempts: ", this.maxNrOfAuthAttempts);
+        if (this.attemptIndex >= this.maxNrOfAuthAttempts) {
             this.messageToShow = "Number of authentication attempts exceeded";
             if (this.lastSignCallResultedInAuthenticationFailed) {
                 this.createAndDispatchFailureEvent("Failure during Signing: Authentication did not work. ");
@@ -81,7 +83,7 @@ let KeycloakSignature = class KeycloakSignature extends LitElement {
                 console.log('POST request successful');
                 const bodyJson = await response.json();
                 this.lastSignCallResultedInAuthenticationFailed = false;
-                this.attemptIndex = this.maxNumberOfFailedAttempts;
+                this.attemptIndex = this.maxNrOfAuthAttempts;
                 this.createAndDispatchAcceptEvent(bodyJson);
             }
             else if (response.status === 403) {
@@ -94,7 +96,7 @@ let KeycloakSignature = class KeycloakSignature extends LitElement {
                 console.error('POST request failed');
                 this.messageToShow = "Something unexpected happened";
                 this.lastSignCallResultedInAuthenticationFailed = false;
-                this.attemptIndex = this.maxNumberOfFailedAttempts;
+                this.attemptIndex = this.maxNrOfAuthAttempts;
                 this.createAndDispatchFailureEvent("Failure during Signing: Unexpected failure happened. Status response of Keycloak is: " + response.statusText);
             }
         }
@@ -102,7 +104,7 @@ let KeycloakSignature = class KeycloakSignature extends LitElement {
             console.error('Error:', error);
             this.messageToShow = "Something unexpected happened";
             this.lastSignCallResultedInAuthenticationFailed = false;
-            this.attemptIndex = this.maxNumberOfFailedAttempts;
+            this.attemptIndex = this.maxNrOfAuthAttempts;
             this.createAndDispatchFailureEvent("Failure during Signing: Unexpected failure happened: : " + error);
         }
         this.passwordInput.value = '';
@@ -162,6 +164,9 @@ __decorate([
 __decorate([
     property({ attribute: 'reject', type: String })
 ], KeycloakSignature.prototype, "rejectText", void 0);
+__decorate([
+    property({ attribute: 'max-nr-of-auth-attempts', type: Number })
+], KeycloakSignature.prototype, "maxNrOfAuthAttempts", void 0);
 __decorate([
     property({ attribute: false })
 ], KeycloakSignature.prototype, "messageToShow", void 0);

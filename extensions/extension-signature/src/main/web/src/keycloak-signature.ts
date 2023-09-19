@@ -40,8 +40,10 @@ export class KeycloakSignature extends LitElement {
   @property({attribute: 'reject', type: String})
   private rejectText = 'Reject';
 
-  private maxNumberOfFailedAttempts = 3;
-  private attemptIndex = 0;
+  @property({attribute: 'max-nr-of-auth-attempts', type: Number})
+  private maxNrOfAuthAttempts = 3;
+
+  private attemptIndex = 1;
   private lastSignCallResultedInAuthenticationFailed = false
 
   @property({attribute: false})
@@ -76,7 +78,7 @@ export class KeycloakSignature extends LitElement {
   private async handleAcceptButtonClick(event: Event) {
     event.preventDefault();
 
-    if (this.attemptIndex >= this.maxNumberOfFailedAttempts) {
+    if (this.attemptIndex >= this.maxNrOfAuthAttempts) {
       this.messageToShow = "Number of authentication attempts exceeded";
       if (this.lastSignCallResultedInAuthenticationFailed) {
         this.createAndDispatchFailureEvent("Failure during Signing: Authentication did not work. ");
@@ -108,7 +110,7 @@ export class KeycloakSignature extends LitElement {
           const bodyJson = await response.json();
 
           this.lastSignCallResultedInAuthenticationFailed = false;
-          this.attemptIndex = this.maxNumberOfFailedAttempts;
+          this.attemptIndex = this.maxNrOfAuthAttempts;
           this.createAndDispatchAcceptEvent(bodyJson)
         } else if (response.status === 403) {
           console.log('403: authentication failed', this.attemptIndex);
@@ -119,14 +121,14 @@ export class KeycloakSignature extends LitElement {
           console.error('POST request failed');
           this.messageToShow = "Something unexpected happened";
           this.lastSignCallResultedInAuthenticationFailed = false;
-          this.attemptIndex = this.maxNumberOfFailedAttempts;
+          this.attemptIndex = this.maxNrOfAuthAttempts;
           this.createAndDispatchFailureEvent("Failure during Signing: Unexpected failure happened. Status response of Keycloak is: " + response.statusText);
         }
       } catch (error) {
         console.error('Error:', error);
         this.messageToShow = "Something unexpected happened";
         this.lastSignCallResultedInAuthenticationFailed = false;
-        this.attemptIndex = this.maxNumberOfFailedAttempts;
+        this.attemptIndex = this.maxNrOfAuthAttempts;
         this.createAndDispatchFailureEvent("Failure during Signing: Unexpected failure happened: : " + error);
       }
 
