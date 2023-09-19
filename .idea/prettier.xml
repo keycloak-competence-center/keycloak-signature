@@ -3,6 +3,6 @@
   <component name="PrettierConfiguration">
     <option name="myConfigurationMode" value="AUTOMATIC" />
     <option name="myRunOnSave" value="true" />
-    <option name="myFilesPattern" value="extensions/extension-signature/{**/*,*}.{js,ts,jsx,tsx,vue,astro}" />
+    <option name="myFilesPattern" value="extensions/extension-signature/{**/*,*}.{cjs,html,js,json,md,ts}" />
   </component>
 </project>
