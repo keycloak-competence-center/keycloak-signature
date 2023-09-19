@@ -18,7 +18,6 @@
         <assets.source>${project.basedir}/src/main/web</assets.source>
     </properties>
 
-
     <dependencies>
         <!-- Keycloak -->
         <dependency>
@@ -73,8 +72,6 @@
         </plugins>
     </build>
 
-
-
     <profiles>
         <profile>
             <id>local</id>
@@ -109,33 +106,33 @@
                                     <npmVersion>${npm.version}</npmVersion>
                                 </configuration>
                             </execution>
+                            <execution>
+                                <id>npm-dependencies</id>
+                                <goals>
+                                    <goal>npm</goal>
+                                </goals>
+                                <configuration>
+                                    <arguments>ci</arguments>
+                                </configuration>
+                            </execution>
 <!--                            <execution>-->
-<!--                                <id>npm-dependencies</id>-->
+<!--                                <id>npm-test</id>-->
 <!--                                <goals>-->
 <!--                                    <goal>npm</goal>-->
 <!--                                </goals>-->
 <!--                                <configuration>-->
-<!--                                    <arguments>ci</arguments>-->
+<!--                                    <arguments>test</arguments>-->
 <!--                                </configuration>-->
 <!--                            </execution>-->
-                            <!--                            <execution>-->
-                            <!--                                <id>npm-test</id>-->
-                            <!--                                <goals>-->
-                            <!--                                    <goal>npm</goal>-->
-                            <!--                                </goals>-->
-                            <!--                                <configuration>-->
-                            <!--                                    <arguments>test</arguments>-->
-                            <!--                                </configuration>-->
-                            <!--                            </execution>-->
-<!--                            <execution>-->
-<!--                                <id>npm-build</id>-->
-<!--                                <goals>-->
-<!--                                    <goal>npm</goal>-->
-<!--                                </goals>-->
-<!--                                <configuration>-->
-<!--                                    <arguments>run build</arguments>-->
-<!--                                </configuration>-->
-<!--                            </execution>-->
+                            <execution>
+                                <id>npm-build</id>
+                                <goals>
+                                    <goal>npm</goal>
+                                </goals>
+                                <configuration>
+                                    <arguments>run build</arguments>
+                                </configuration>
+                            </execution>
                         </executions>
                     </plugin>
                     <plugin>
