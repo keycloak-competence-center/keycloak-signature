@@ -17,9 +17,9 @@ The Keycloak Signature Extension gives Keycloak the ability to sign any values, 
 
 This extension can be used in 3 different ways:
 
-- **[Keycloak Sign Endpoint](#1-Keycloak-Sign-Endpoint)**: the minimal way is sending the necessary data to the sign endpoint.
-- **[Custom Element](#2-Custom-Element)**: Using `<keycloak-signature>` web components which calls the POST [Keycloak Sign Endpoint](#1-Keycloak-Sign-Endpoint).
-- **[Keycloak Page](#3-Keycloak-Page)**: Integrates the `<keycloak-signature>` [custom element](#2-Custom-Element) to provide signing functionality.
+- **[Keycloak Sign Endpoint](./SPECIFICATION.md#1-Keycloak-Sign-Endpoint)**: the minimal way is sending the necessary data to the sign endpoint.
+- **[Custom Element](./SPECIFICATION.md#2-Custom-Element)**: Using `<keycloak-signature>` web components which calls the POST [Keycloak Sign Endpoint](./SPECIFICATION.md#1-Keycloak-Sign-Endpoint).
+- **[Keycloak Page](./SPECIFICATION.md#3-Keycloak-Page)**: Integrates the `<keycloak-signature>` [custom element](./SPECIFICATION.md#2-Custom-Element) to provide signing functionality.
 
 Have a look at the [specification](./SPECIFICATION.md) for more detailed information about composition and configuration.
 
