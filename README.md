@@ -12,5 +12,17 @@ This project creates a custom [Keycloak] server based on [Keycloak.X]. It is str
 
 Please see the tutorial [building a custom Keycloak container image](https://keycloak.ch/keycloak-tutorials/tutorial-custom-keycloak/) for the details of this project.
 
+## Developing
+
+### Requirements
+
+- Node
+- Docker
+- [EnvFile](https://plugins.jetbrains.com/plugin/7861-envfile) IntelliJ plugin
+
+### Getting Started
+
+TODO
+
 [Keycloak]: https://keycloak.org
 [Keycloak.X]: https://www.keycloak.org/migration/migrating-to-quarkus
