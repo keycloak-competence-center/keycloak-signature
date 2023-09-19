@@ -1,9 +1,3 @@
-/**
- * @license
- * Copyright 2021 Google LLC
- * SPDX-License-Identifier: BSD-3-Clause
- */
-
 import {KeycloakSignature} from '../keycloak-signature';
 
 import {fixture, assert} from '@open-wc/testing';
@@ -40,7 +34,9 @@ suite('my-element', () => {
   });
 
   test('handles a click', async () => {
-    const el = (await fixture(html`<my-element></my-element>`)) as KeycloakSignature;
+    const el = (await fixture(
+      html`<my-element></my-element>`
+    )) as KeycloakSignature;
     const button = el.shadowRoot!.querySelector('button')!;
     button.click();
     await el.updateComplete;
@@ -55,7 +51,9 @@ suite('my-element', () => {
   });
 
   test('styling applied', async () => {
-    const el = (await fixture(html`<my-element></my-element>`)) as KeycloakSignature;
+    const el = (await fixture(
+      html`<my-element></my-element>`
+    )) as KeycloakSignature;
     await el.updateComplete;
     assert.equal(getComputedStyle(el).paddingTop, '16px');
   });

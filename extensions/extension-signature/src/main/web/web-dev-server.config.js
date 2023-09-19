@@ -1,9 +1,3 @@
-/**
- * @license
- * Copyright 2021 Google LLC
- * SPDX-License-Identifier: BSD-3-Clause
- */
-
 import {legacyPlugin} from '@web/dev-server-legacy';
 import proxy from 'koa-proxies';
 
@@ -27,7 +21,7 @@ export default {
     proxy('/realms/master/signature-extension', {
       target: 'http://localhost:8080',
       changeOrigin: true,
-      logs: true
+      logs: true,
     }),
-  ]
+  ],
 };

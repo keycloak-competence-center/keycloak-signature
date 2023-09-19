@@ -1,9 +1,3 @@
-/**
- * @license
- * Copyright 2019 Google LLC
- * SPDX-License-Identifier: BSD-3-Clause
- */
-
 import {css, html, LitElement, nothing} from 'lit';
 import {customElement, property, query} from 'lit/decorators.js';
 
@@ -28,10 +22,10 @@ export class KeycloakSignature extends LitElement {
   @property()
   private signEndpoint = '/realms/master/signature-extension/sign';
 
-  @property( {attribute: 'payload', type: String} )
-  private payload : string | undefined;
+  @property({attribute: 'payload', type: String})
+  private payload: string | undefined;
 
-  @property( {attribute: 'title', type: String} )
+  @property({attribute: 'title', type: String})
   private titleText = 'Title';
 
   @property({attribute: 'accept', type: String})
@@ -47,14 +41,14 @@ export class KeycloakSignature extends LitElement {
   private lastSignCallResultedInAuthenticationFailed = false
 
   @property({attribute: false})
-  private messageToShow: string = "";
+  private messageToShow: string = '';
 
-  @query("#passwordId")
-  private passwordInput?: HTMLInputElement
+  @query('#passwordId')
+  private passwordInput?: HTMLInputElement;
 
   override render() {
     if (!this.payload) {
-      console.warn("No valid payload provided.");
+      console.warn('No valid payload provided.');
       return nothing;
     }
 
@@ -81,33 +75,34 @@ export class KeycloakSignature extends LitElement {
     if (this.attemptIndex >= this.maxNrOfAuthAttempts) {
       this.messageToShow = "Number of authentication attempts exceeded";
       if (this.lastSignCallResultedInAuthenticationFailed) {
-        this.createAndDispatchFailureEvent("Failure during Signing: Authentication did not work. ");
+        this.createAndDispatchFailureEvent(
+          'Failure during Signing: Authentication did not work. '
+        );
       }
       return;
     }
 
-    console.log("handleAcceptButtonClick: ")
-     try {
-        // const url = '/realms/koerber/activate_order/sign?redirect_uri=http%3A%2F%2Fgoogle.com%3Ftest1%3D1%26test2%3D2&description=this_is_an_order'; // Replace with your API endpoint
-        const url = this.signEndpoint;
-        const data = {
-          // Define the data you want to send in the request body
-          payload: this.payload,
-          credentials: {password : this.passwordInput?.value},
-        };
+    console.log('handleAcceptButtonClick: ');
+    try {
+      // const url = '/realms/koerber/activate_order/sign?redirect_uri=http%3A%2F%2Fgoogle.com%3Ftest1%3D1%26test2%3D2&description=this_is_an_order'; // Replace with your API endpoint
+      const url = this.signEndpoint;
+      const data = {
+        // Define the data you want to send in the request body
+        payload: this.payload,
+        credentials: {password: this.passwordInput?.value},
+      };
 
-        const response = await fetch(url, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data),
-        });
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
 
-
-        if (response.ok) {
-          console.log('POST request successful');
-          const bodyJson = await response.json();
+      if (response.ok) {
+        console.log('POST request successful');
+        const bodyJson = await response.json();
 
           this.lastSignCallResultedInAuthenticationFailed = false;
           this.attemptIndex = this.maxNrOfAuthAttempts;
@@ -132,15 +127,14 @@ export class KeycloakSignature extends LitElement {
         this.createAndDispatchFailureEvent("Failure during Signing: Unexpected failure happened: : " + error);
       }
 
-      this.passwordInput!.value = '';
+    this.passwordInput!.value = '';
   }
 
   private handleRejectButtonClick() {
     console.log('Reject Button pressed');
 
-    this.createAndDispatchRejectEvent()
+    this.createAndDispatchRejectEvent();
   }
-
 
   private createAndDispatchAcceptEvent(bodyJson: Record<string, string>) {
     const eventSignedPayloadReceived = new CustomEvent('signed', {
@@ -148,7 +142,7 @@ export class KeycloakSignature extends LitElement {
         signedPayload: bodyJson.signedPayload,
       },
       bubbles: false,
-      composed: false
+      composed: false,
     });
 
     this.dispatchEvent(eventSignedPayloadReceived);
@@ -157,10 +151,10 @@ export class KeycloakSignature extends LitElement {
   private createAndDispatchFailureEvent(reason: String) {
     const eventAuthenticationFailed = new CustomEvent('failure', {
       detail: {
-        reason: reason
+        reason: reason,
       },
       bubbles: false,
-      composed: false
+      composed: false,
     });
 
     this.dispatchEvent(eventAuthenticationFailed);
@@ -169,12 +163,11 @@ export class KeycloakSignature extends LitElement {
   private createAndDispatchRejectEvent() {
     const eventRejected = new CustomEvent('rejected', {
       bubbles: false,
-      composed: false
+      composed: false,
     });
 
     this.dispatchEvent(eventRejected);
   }
-
 }
 
 declare global {
