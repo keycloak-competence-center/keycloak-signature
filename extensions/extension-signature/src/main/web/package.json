@@ -35,7 +35,7 @@
     "test:prod:watch": "MODE=prod wtr --watch",
     "test:watch": "wtr --watch",
     "postinstall": "npm run build:scss",
-    "watch:scss": "onchange 'src/**/*.scss' -- npm run build:scss"
+    "watch:scss": "onchange -i 'src/**/*.scss' -- npm run build:scss"
   },
   "types": "dist/keycloak-signature.d.ts",
   "dependencies": {
