@@ -63,8 +63,10 @@ export class KeycloakSignature extends LitElement {
           : nothing}
         <slot><p>Please provide your credentials below</p></slot>
         <form @submit="${this.handleFormSubmit}">
-          <label for="password">Password:</label>
-          <input type="password" id="password" name="password" /><br /><br />
+          <label class="password"
+            >Password:
+            <input type="password" id="password" name="password" /><br /><br />
+          </label>
           <p style="color:#FF0000">${this.messageToShow}</p>
           <button type="submit">${this.acceptText}</button>
           <button @click="${this.handleResetButton}" type="reset">

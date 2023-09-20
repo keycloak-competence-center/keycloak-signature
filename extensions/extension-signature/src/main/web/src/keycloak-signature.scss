@@ -5,4 +5,11 @@
 .title {
   font-size: var(--keycloak-signature-title-font-size, 2rem);
   font-weight: var(--keycloak-signature-title-font-weight, bold);
+  color: var(--keycloak-signature-title-color, #000);
+}
+
+.password {
+  font-size: var(--keycloak-signature-password-font-size, 1rem);
+  font-weight: var(--keycloak-signature-password-font-weight, normal);
+  color: var(--keycloak-signature-password-color, #000);
 }
