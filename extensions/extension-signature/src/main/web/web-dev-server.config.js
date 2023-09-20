@@ -1,4 +1,3 @@
-import {legacyPlugin} from '@web/dev-server-legacy';
 import proxy from 'koa-proxies';
 import {esbuildPlugin} from '@web/dev-server-esbuild';
 
@@ -10,15 +9,7 @@ if (!['dev', 'prod'].includes(mode)) {
 export default {
   nodeResolve: {exportConditions: mode === 'dev' ? ['development'] : []},
   preserveSymlinks: true,
-  plugins: [
-    esbuildPlugin({ts: true, target: 'ES2020'}),
-    legacyPlugin({
-      polyfills: {
-        // Manually imported in index.html file
-        webcomponents: false,
-      },
-    }),
-  ],
+  plugins: [esbuildPlugin({ts: true, target: 'ES2020'})],
   middleware: [
     proxy('/realms/master/signature-extension', {
       target: 'http://localhost:8080',
