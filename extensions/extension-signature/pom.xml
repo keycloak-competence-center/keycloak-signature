@@ -150,7 +150,7 @@
                                     <resources>
                                         <resource>
                                             <directory>${project.basedir}/src/main/web/dist</directory>
-                                            <filtering>true</filtering>
+                                            <filtering>false</filtering>
                                         </resource>
                                     </resources>
                                     <nonFilteredFileExtensions>
