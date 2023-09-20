@@ -9,8 +9,8 @@
   "scripts": {
     "build": "tsc && rollup -c",
     "build:watch": "tsc --watch",
-    "clean": "rimraf keycloak-signature.{d.ts,d.ts.map,js,js.map} test/keycloak-signature.{d.ts,d.ts.map,js,js.map} test/keycloak-signature_test.{d.ts,d.ts.map,js,js.map}",
-    "lint": "npm run lint:lit-analyzer && npm run lint:eslint",
+    "clean": "rimraf dist",
+    "lint": "run-p -l lint:*",
     "lint:eslint": "eslint 'src/**/*.ts'",
     "lint:lit-analyzer": "lit-analyzer",
     "format": "prettier \"**/*.{cjs,html,js,json,md,ts}\" --ignore-path ./.eslintignore --write",
@@ -54,6 +54,7 @@
     "eslint": "^8.15.0",
     "koa-proxies": "^0.12.3",
     "lit-analyzer": "^1.2.1",
+    "npm-run-all": "^4.1.5",
     "prettier": "^2.6.2",
     "rimraf": "^3.0.2",
     "rollup": "^2.73.0",
