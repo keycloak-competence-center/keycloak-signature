@@ -33,7 +33,7 @@ info:
     Keycloak Signature Extension REST API's
   version: 1.0.0
 paths:
-  /realms/master/signature-extension/sign:
+  /realms/master/signature/sign:
     post:
       tags:
         - signing
@@ -184,7 +184,7 @@ The [web component](https://developer.mozilla.org/en-US/docs/Web/API/Web_compone
 | Property              | Attribute                 | Type     | Default                                   | Description                                                                                                                                                                                                        |
 | --------------------- | ------------------------- | -------- | ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `payload`             | `payload`                 | `string` | ""                                        | The payload which is going to be signed by Keycloak. If an invalid payload is given (e.g. empty string, `undefined` value etc.), the component does not render anything and logs a warning to the browser console. |
-| `signEndpoint`        | `sign-endpoint`           | `string` | "/realms/master/signature-extension/sign" | The API endpoint used for signing                                                                                                                                                                                  |
+| `signEndpoint`        | `sign-endpoint`           | `string` | "/realms/master/signature/sign" | The API endpoint used for signing                                                                                                                                                                                  |
 | `titleText`           | `title`                   | `string` | "Signature"                               | Text of the title displayed on the top of the component                                                                                                                                                            |
 | `acceptText`          | `accept`                  | `string` | "Accept"                                  | Text of the accept button                                                                                                                                                                                          |
 | `rejectText`          | `reject`                  | `string` | "Reject"                                  | Text of the reject button                                                                                                                                                                                          |
