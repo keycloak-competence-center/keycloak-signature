@@ -39,18 +39,24 @@ This project creates a custom [Keycloak] server based on [Keycloak.X]. It is str
 - `server`: provides a Keycloak installation for local development & testing
 - `themes`: provides samples for custom themes
 
-Please see the tutorial [building a custom Keycloak container image](https://keycloak.ch/keycloak-tutorials/tutorial-custom-keycloak/) for the details of this project.
+Please see the tutorial [of custom Keycloak](https://keycloak.ch/keycloak-tutorials/tutorial-custom-keycloak/) for more details of this project.
 
 ### Requirements
 
+Please see the [requirements of custom Keycloak](https://keycloak.ch/keycloak-tutorials/tutorial-custom-keycloak/#requirements).
+
+For this project you also need:
+
 - Node
-- Docker
-- [EnvFile](https://plugins.jetbrains.com/plugin/7861-envfile) IntelliJ plugin
 
 ### Getting Started
 
-TODO
-
+- Please have a look at [how you can run custom Keycloak](https://keycloak.ch/keycloak-tutorials/tutorial-custom-keycloak/#usage).
+- In order to develop on the `<keycloak-signature>` component you can use the web dev server. Run following command under `./extensions/extension-signature/src/main/web`:
+    ```shell
+    npm start
+    ```
+     
 ## Sponsors
 
 [koerber](https://koerber-pharma.com)
