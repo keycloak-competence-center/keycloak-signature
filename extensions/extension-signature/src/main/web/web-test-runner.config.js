@@ -1,5 +1,6 @@
 import {legacyPlugin} from '@web/dev-server-legacy';
 import {playwrightLauncher} from '@web/test-runner-playwright';
+import {esbuildPlugin} from '@web/dev-server-esbuild';
 
 const mode = process.env.MODE || 'dev';
 if (!['dev', 'prod'].includes(mode)) {
@@ -8,8 +9,8 @@ if (!['dev', 'prod'].includes(mode)) {
 
 const browsers = {
   chromium: playwrightLauncher({product: 'chromium'}),
-  firefox: playwrightLauncher({product: 'firefox'}),
-  webkit: playwrightLauncher({product: 'webkit'}),
+  // firefox: playwrightLauncher({product: 'firefox'}),
+  // webkit: playwrightLauncher({product: 'webkit'}),
 };
 
 // Prepend BROWSERS=x,y to `npm run test` to run a subset of browsers
@@ -29,7 +30,7 @@ try {
 // https://modern-web.dev/docs/test-runner/cli-and-configuration/
 export default {
   rootDir: '.',
-  files: ['./test/**/*_test.js'],
+  files: ['src/**/*.spec.ts'],
   nodeResolve: {exportConditions: mode === 'dev' ? ['development'] : []},
   preserveSymlinks: true,
   browsers: commandLineBrowsers ?? Object.values(browsers),
@@ -41,6 +42,7 @@ export default {
     },
   },
   plugins: [
+    esbuildPlugin({ts: true, target: 'ES2020'}),
     // Detect browsers without modules (e.g. IE11) and transform to SystemJS
     // (https://modern-web.dev/docs/dev-server/plugins/legacy/).
     legacyPlugin({
