@@ -1,13 +1,14 @@
 Keycloak Signature Extension
 ===
 
-The Keycloak Signature Extension gives Keycloak the ability to sign any values, after the user has "re-authenticated" himself. If the credentials are valid, Keycloak will return a JWT including the payload which should have been signed.
+The Keycloak Signature Extension gives Keycloak the ability to sign any values, after the user has "re-authenticated" himself. If the credentials are valid, Keycloak will response with a signed JWT including the payload.
 
 Specification
 ===
 
-> [!NOTE] 
+> [!NOTE]
 > **This document is a draft and is still being edited.**
+
 
 This extension can be used in 3 different ways:
 
@@ -15,7 +16,9 @@ This extension can be used in 3 different ways:
 - **[Custom Element](#2-Custom-Element)**: Using `<keycloak-signature>` web components which calls the POST [Keycloak Sign Endpoint](#1-Keycloak-Sign-Endpoint).
 - **[Keycloak Page](#3-Keycloak-Page)**: Integrates the `<keycloak-signature>` [custom element](#2-Custom-Element) to provide signing functionality.
 
+
 We split the realization of the extension in the following sections:
+
 
 ## 1. Keycloak Sign Endpoint
 
@@ -111,31 +114,21 @@ Cookie: KEYCLOAK_IDENTITY=eyJhbGciOiJIUzI1NiIsInR5cCI6...
 }
 ```
 
-
-
-
-
 Response OK:
 ```
 HTTP/1.1 200 OK
 Content-Type: application/json
-Access-Control-Allow-Origin: server.example.com (TODO necessary?)
 
 {
    "signedPayload": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
 }
-  ```
-
-
+  ``` 
 
 Response Unauthorized:
 
 ```
 HTTP/1.1 403 Forbidden  
 ```
-
-
-
 
 ### SignedPayload
 
@@ -166,15 +159,9 @@ When the received credentials are valid then Keycloak will create a [JSON Web To
 - `typ`: Type of JWT
 - `nonce`: Unique value linking a request to a token
 
-<!-- TODO: discuss, specifying algorithm? -->
-
 The JWT will be singed with the private key of Keycloak (asymmertic signing).
-The default signing algorithm is **RS256**, however it can be configured with `defaultSignatureAlgorithm` in the realm JSON configuration file.
+The default signing algorithm is **RS256**, however it can be configured with `defaultSignatureAlgorithm` property in the realm JSON configuration file.
 
-### CORS
-
-TODO:
-CORS access can be configured via client --> Web origins in Keycloak.
 
 ## 2. Custom Element
 
@@ -204,8 +191,6 @@ The [web component](https://developer.mozilla.org/en-US/docs/Web/API/Web_compone
 | `maxNrOfAuthAttempts` | `max-nr-of-auth-attempts` | `number` | 3                                         | Maximal number of authentication attempts                                                                                                                                                                          |
 
 
-
-
 #### Slots
 
 | Name | Description                                                  |
@@ -222,9 +207,9 @@ The [web component](https://developer.mozilla.org/en-US/docs/Web/API/Web_compone
 
 #### CSS Shadow Parts
 
-:::info
-**Not defined yet…**
-:::
+> [!NOTE]
+> **Not defined yet…**
+
 
 | Part          | Description                 |
 | ------------- | --------------------------- |
@@ -232,9 +217,8 @@ The [web component](https://developer.mozilla.org/en-US/docs/Web/API/Web_compone
 
 #### CSS Custom Properties
 
-:::info
-**Not defined yet…**
-:::
+> [!NOTE]
+> **Not defined yet…**
 
 | Property              | Description                           |
 | --------------------- | ------------------------------------- |
@@ -247,9 +231,8 @@ Clicking on the accept button will call the sign endpoint (see [1.](#1-Keycloak-
 
 ## 3. Keycloak Page
 
-:::info
-**Out of scope**
-:::
+> [!NOTE]
+> **Out of scope**
 
 ![](https://hedgedoc.inventage.com/uploads/3d34be0a-dd87-4430-a4d8-fe1bc55060be.png)
 
@@ -331,6 +314,7 @@ The response status code is 200.
 - `additonal-properties` --> zusätzlicher JSON Parameter der Webkomponente
 - Keycloak Page
 - Configure Authentication Method
+- CORS: client configuration or set response header (Access-Control-Allow-Origin)
 
 ## Archive
 
