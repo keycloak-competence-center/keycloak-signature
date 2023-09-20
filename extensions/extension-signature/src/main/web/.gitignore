@@ -4,3 +4,4 @@
 /test/
 /dist/
 custom-elements.json
+src/**/*.scss.ts

@@ -15,6 +15,7 @@
     "analyze": "cem analyze",
     "analyze:watch": "npm run analyze -- --watch",
     "build": "npm run clean && tsc && rollup -c && npm run analyze",
+    "build:scss": "node scripts/build-scss.js",
     "checksize": "rollup -c ; cat keycloak-signature.bundled.js | gzip -9 | wc -c ; rm keycloak-signature.bundled.js",
     "clean": "rimraf dist",
     "format": "run-s -l format:*",
@@ -27,11 +28,13 @@
     "lint:types": "tsc --noEmit --pretty",
     "serve": "wds --watch",
     "serve:prod": "MODE=prod npm run serve",
-    "start": "npm run serve",
+    "start": "run-p serve watch:scss",
     "test": "wtr",
     "test:prod": "MODE=prod wtr",
     "test:prod:watch": "MODE=prod wtr --watch",
-    "test:watch": "wtr --watch"
+    "test:watch": "wtr --watch",
+    "postinstall": "npm run build:scss",
+    "watch:scss": "onchange 'src/**/*.scss' -- npm run build:scss"
   },
   "types": "dist/keycloak-signature.d.ts",
   "dependencies": {
@@ -50,14 +53,17 @@
     "@web/test-runner": "^0.17.1",
     "@web/test-runner-playwright": "^0.10.1",
     "eslint": "^8.49.0",
+    "fast-glob": "^3.3.1",
     "koa-proxies": "^0.12.3",
     "lit-analyzer": "^1.2.1",
     "normalize.css": "^8.0.1",
     "npm-run-all": "^4.1.5",
+    "onchange": "^7.1.0",
     "prettier": "^3.0.3",
     "rimraf": "^5.0.1",
     "rollup": "^3.29.2",
     "rollup-plugin-summary": "^2.0.0",
+    "sass": "^1.67.0",
     "typescript": "~4 <=4.9.3"
   },
   "keywords": [

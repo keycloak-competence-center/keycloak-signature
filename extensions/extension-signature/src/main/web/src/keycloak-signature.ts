@@ -1,5 +1,7 @@
-import {css, html, LitElement, nothing} from 'lit';
+import {CSSResultGroup, html, LitElement, nothing} from 'lit';
 import {customElement, property, query} from 'lit/decorators.js';
+
+import styles from './keycloak-signature.scss.js';
 
 /**
  * An example element.
@@ -11,14 +13,8 @@ import {customElement, property, query} from 'lit/decorators.js';
  */
 @customElement('keycloak-signature')
 export class KeycloakSignature extends LitElement {
-  static override styles = css`
-    :host {
-      display: block;
-      border: solid 1px gray;
-      padding: 16px;
-      max-width: 800px;
-    }
-  `;
+  /** @private */
+  static override styles: CSSResultGroup = styles;
 
   @property()
   signEndpoint = '/realms/master/signature-extension/sign';
