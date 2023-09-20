@@ -1,4 +1,5 @@
-import {KeycloakSignature} from './keycloak-signature.js';
+import {KeycloakSignature} from './keycloak-signature';
+import './keycloak-signature';
 
 import {fixture, assert} from '@open-wc/testing';
 import {html} from 'lit/static-html.js';

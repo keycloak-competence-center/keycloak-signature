@@ -7,6 +7,7 @@ import {customElement, property, query} from 'lit/decorators.js';
  * @fires count-changed - Indicates when the count changes
  * @slot - This element has a slot
  * @csspart button - The button
+ * @customElement keycloak-signature
  */
 @customElement('keycloak-signature')
 export class KeycloakSignature extends LitElement {
@@ -20,31 +21,31 @@ export class KeycloakSignature extends LitElement {
   `;
 
   @property()
-  private signEndpoint = '/realms/master/signature-extension/sign';
+  signEndpoint = '/realms/master/signature-extension/sign';
 
   @property({attribute: 'payload', type: String})
-  private payload: string | undefined;
+  payload: string | undefined;
 
   @property({attribute: 'title', type: String})
-  private titleText = 'Title';
+  titleText = 'Title';
 
   @property({attribute: 'accept', type: String})
-  private acceptText = 'Accept';
+  acceptText = 'Accept';
 
   @property({attribute: 'reject', type: String})
-  private rejectText = 'Reject';
+  rejectText = 'Reject';
 
   @property({attribute: 'max-nr-of-auth-attempts', type: Number})
-  private maxNrOfAuthAttempts = 3;
+  maxNrOfAuthAttempts = 3;
 
   private attemptIndex = 1;
-  private lastSignCallResultedInAuthenticationFailed = false
+  private lastSignCallResultedInAuthenticationFailed = false;
 
   @property({attribute: false})
-  private messageToShow = '';
+  messageToShow = '';
 
   @query('#passwordId')
-  private passwordInput?: HTMLInputElement;
+  passwordInput?: HTMLInputElement;
 
   override render() {
     if (!this.payload) {
@@ -53,19 +54,23 @@ export class KeycloakSignature extends LitElement {
     }
 
     return html`
-      <p>
-        <h1>${this.titleText}</h1>
-        <slot>This is the body</slot>
-        <label for="password">Password:</label>
-        <form id="form">        
-          <input type="password" id="passwordId" name="password"><br><br>
-          <p style="color:#FF0000">
-            ${this.messageToShow}
-          </p>
-          <button type="submit" id="acceptButton" @click="${this.handleAcceptButtonClick}">${this.acceptText}</button>
-        </form>
-        <button id="rejectButton" @click="${this.handleRejectButtonClick}">${this.rejectText}</button>
-      </p>
+      <h1>${this.titleText}</h1>
+      <slot>This is the body</slot>
+      <label for="password">Password:</label>
+      <form id="form">
+        <input type="password" id="passwordId" name="password" /><br /><br />
+        <p style="color:#FF0000">${this.messageToShow}</p>
+        <button
+          type="submit"
+          id="acceptButton"
+          @click="${this.handleAcceptButtonClick}"
+        >
+          ${this.acceptText}
+        </button>
+      </form>
+      <button id="rejectButton" @click="${this.handleRejectButtonClick}">
+        ${this.rejectText}
+      </button>
     `;
   }
 
@@ -73,7 +78,7 @@ export class KeycloakSignature extends LitElement {
     event.preventDefault();
 
     if (this.attemptIndex >= this.maxNrOfAuthAttempts) {
-      this.messageToShow = "Number of authentication attempts exceeded";
+      this.messageToShow = 'Number of authentication attempts exceeded';
       if (this.lastSignCallResultedInAuthenticationFailed) {
         this.createAndDispatchFailureEvent(
           'Failure during Signing: Authentication did not work. '
@@ -104,28 +109,33 @@ export class KeycloakSignature extends LitElement {
         console.log('POST request successful');
         const bodyJson = await response.json();
 
-          this.lastSignCallResultedInAuthenticationFailed = false;
-          this.attemptIndex = this.maxNrOfAuthAttempts;
-          this.createAndDispatchAcceptEvent(bodyJson)
-        } else if (response.status === 403) {
-          console.log('403: authentication failed', this.attemptIndex);
-          this.messageToShow = "Wrong password";
-          this.lastSignCallResultedInAuthenticationFailed = true;
-          this.attemptIndex++;
-        } else {
-          console.error('POST request failed');
-          this.messageToShow = "Something unexpected happened";
-          this.lastSignCallResultedInAuthenticationFailed = false;
-          this.attemptIndex = this.maxNrOfAuthAttempts;
-          this.createAndDispatchFailureEvent("Failure during Signing: Unexpected failure happened. Status response of Keycloak is: " + response.statusText);
-        }
-      } catch (error) {
-        console.error('Error:', error);
-        this.messageToShow = "Something unexpected happened";
         this.lastSignCallResultedInAuthenticationFailed = false;
         this.attemptIndex = this.maxNrOfAuthAttempts;
-        this.createAndDispatchFailureEvent("Failure during Signing: Unexpected failure happened: : " + error);
+        this.createAndDispatchAcceptEvent(bodyJson);
+      } else if (response.status === 403) {
+        console.log('403: authentication failed', this.attemptIndex);
+        this.messageToShow = 'Wrong password';
+        this.lastSignCallResultedInAuthenticationFailed = true;
+        this.attemptIndex++;
+      } else {
+        console.error('POST request failed');
+        this.messageToShow = 'Something unexpected happened';
+        this.lastSignCallResultedInAuthenticationFailed = false;
+        this.attemptIndex = this.maxNrOfAuthAttempts;
+        this.createAndDispatchFailureEvent(
+          'Failure during Signing: Unexpected failure happened. Status response of Keycloak is: ' +
+            response.statusText
+        );
       }
+    } catch (error) {
+      console.error('Error:', error);
+      this.messageToShow = 'Something unexpected happened';
+      this.lastSignCallResultedInAuthenticationFailed = false;
+      this.attemptIndex = this.maxNrOfAuthAttempts;
+      this.createAndDispatchFailureEvent(
+        'Failure during Signing: Unexpected failure happened: : ' + error
+      );
+    }
 
     this.passwordInput!.value = '';
   }
