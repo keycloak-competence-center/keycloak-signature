@@ -149,10 +149,7 @@
                                     <outputDirectory>src/main/resources/theme/signature/resources/js</outputDirectory>
                                     <resources>
                                         <resource>
-                                            <directory>${project.basedir}/src/main/web</directory>
-                                            <includes>
-                                                <include>keycloak-signature.bundled.js</include>
-                                            </includes>
+                                            <directory>${project.basedir}/src/main/web/dist</directory>
                                             <filtering>true</filtering>
                                         </resource>
                                     </resources>
