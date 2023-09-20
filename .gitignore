@@ -3,6 +3,7 @@
 /.idea/*
 !/.idea/codeStyles/
 !/.idea/jsLinters/
+!/.idea/stylesheetLinters/
 !/.idea/runConfigurations/
 !/.idea/dataSources.xml
 !/.idea/codeStyleSettings.xml
