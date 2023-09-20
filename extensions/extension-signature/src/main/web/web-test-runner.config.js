@@ -1,4 +1,3 @@
-import {legacyPlugin} from '@web/dev-server-legacy';
 import {playwrightLauncher} from '@web/test-runner-playwright';
 import {esbuildPlugin} from '@web/dev-server-esbuild';
 
@@ -29,7 +28,6 @@ try {
 
 // https://modern-web.dev/docs/test-runner/cli-and-configuration/
 export default {
-  rootDir: '.',
   files: ['src/**/*.spec.ts'],
   nodeResolve: {exportConditions: mode === 'dev' ? ['development'] : []},
   preserveSymlinks: true,
@@ -41,24 +39,5 @@ export default {
       timeout: '60000',
     },
   },
-  plugins: [
-    esbuildPlugin({ts: true, target: 'ES2020'}),
-    // Detect browsers without modules (e.g. IE11) and transform to SystemJS
-    // (https://modern-web.dev/docs/dev-server/plugins/legacy/).
-    legacyPlugin({
-      polyfills: {
-        webcomponents: true,
-        // Inject lit's polyfill-support module into test files, which is required
-        // for interfacing with the webcomponents polyfills
-        custom: [
-          {
-            name: 'lit-polyfill-support',
-            path: 'node_modules/lit/polyfill-support.js',
-            test: "!('attachShadow' in Element.prototype) || !('getRootNode' in Element.prototype) || window.ShadyDOM && window.ShadyDOM.force",
-            module: false,
-          },
-        ],
-      },
-    }),
-  ],
+  plugins: [esbuildPlugin({ts: true, target: 'ES2020'})],
 };
