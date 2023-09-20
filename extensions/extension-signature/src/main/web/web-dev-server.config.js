@@ -11,7 +11,7 @@ export default {
   preserveSymlinks: true,
   plugins: [esbuildPlugin({ts: true, target: 'ES2020'})],
   middleware: [
-    proxy('/realms/master/signature-extension', {
+    proxy('/realms/master/signature', {
       target: 'http://localhost:8080',
       changeOrigin: true,
       logs: true,

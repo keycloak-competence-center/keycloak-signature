@@ -17,7 +17,7 @@ export class KeycloakSignature extends LitElement {
   static override styles: CSSResultGroup = styles;
 
   @property()
-  signEndpoint = '/realms/master/signature-extension/sign';
+  signEndpoint = '/realms/master/signature/sign';
 
   @property({attribute: 'payload', type: String})
   payload: string | undefined;

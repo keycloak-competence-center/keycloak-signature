@@ -1,4 +1,4 @@
-package com.inventage.keycloak.reenterpasswordauthenticator.infrastructure.record;
+package com.inventage.keycloak.signature.infrastructure.record;
 
 import java.util.Map;
 

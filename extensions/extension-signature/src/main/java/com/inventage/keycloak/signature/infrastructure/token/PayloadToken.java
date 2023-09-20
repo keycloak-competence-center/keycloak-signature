@@ -1,11 +1,10 @@
-package com.inventage.keycloak.reenterpasswordauthenticator.infrastructure.token;
+package com.inventage.keycloak.signature.infrastructure.token;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.ws.rs.core.UriInfo;
 import org.keycloak.TokenCategory;
 import org.keycloak.authentication.actiontoken.DefaultActionToken;
 import org.keycloak.common.util.Time;
-import org.keycloak.crypto.Algorithm;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
 import org.keycloak.services.Urls;

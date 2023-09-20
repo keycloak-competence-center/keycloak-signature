@@ -1,7 +1,7 @@
-package com.inventage.keycloak.reenterpasswordauthenticator.infrastructure.resource;
+package com.inventage.keycloak.signature.infrastructure.resource;
 
-import com.inventage.keycloak.reenterpasswordauthenticator.infrastructure.record.SignRequest;
-import com.inventage.keycloak.reenterpasswordauthenticator.infrastructure.token.PayloadToken;
+import com.inventage.keycloak.signature.infrastructure.record.SignRequest;
+import com.inventage.keycloak.signature.infrastructure.token.PayloadToken;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 import jakarta.ws.rs.*;
@@ -22,13 +22,13 @@ import org.keycloak.services.util.CacheControlUtil;
 import java.io.InputStream;
 import java.util.Base64;
 
-public class ReenterPasswordResource {
+public class SignatureResource {
 
-    private static final Logger LOGGER = Logger.getLogger(ReenterPasswordResource.class);
+    private static final Logger LOGGER = Logger.getLogger(SignatureResource.class);
 
     final KeycloakSession session;
 
-    public ReenterPasswordResource(KeycloakSession session) {
+    public SignatureResource(KeycloakSession session) {
         this.session = session;
     }
 
@@ -38,23 +38,8 @@ public class ReenterPasswordResource {
     @Produces(MediaType.TEXT_HTML)
     public Response getPage(@QueryParam("payload") String description) {
         // TODO: check if correct realm
-
         LOGGER.debugf("getPage: / endpoint called");
         final InputStream indexHtml = this.getClass().getClassLoader().getResourceAsStream("theme/signature/templates/index.html");
-        final Response.ResponseBuilder responseBuilder = Response.ok(indexHtml).cacheControl(CacheControlUtil.getDefaultCacheControl());
-        return responseBuilder.build();
-    }
-
-    @GET
-    @Path("keycloak-signature.bundled.js")
-    @NoCache
-    @Produces("application/javascript")
-    public Response getKeycloakSignatureJSFile() {
-        // TODO: check if correct realm
-        // TODO: static content https://stackoverflow.com/questions/70714152/how-to-serve-static-files-from-file-system-with-quarkus
-
-        LOGGER.debugf("getKeycloakSignatureJSFile: /keycloak-signature.bundled.js endpoint called");
-        final InputStream indexHtml = this.getClass().getClassLoader().getResourceAsStream("theme/signature/resources/js/keycloak-signature.bundled.js");
         final Response.ResponseBuilder responseBuilder = Response.ok(indexHtml).cacheControl(CacheControlUtil.getDefaultCacheControl());
         return responseBuilder.build();
     }
@@ -80,7 +65,6 @@ public class ReenterPasswordResource {
             return Response.status(403).build();
         }
 
-        // TODO: check if credentials contains an element
         final JsonObject signedPayloadJson = createAndSerializeToken(signRequest, userModel);
 
         final Response.ResponseBuilder responseBuilder = Response
@@ -102,22 +86,12 @@ public class ReenterPasswordResource {
         return JsonObject.of("signedPayload", signedPayloadToken);
     }
 
-    @OPTIONS
-    @Path("/sign")
-    @NoCache
-    public Response signOptions() {
-        // TODO: CORS
-        // TODO: Headers
-        LOGGER.debugf("signOptions: /sign (OPTIONS) endpoint called");
-        final Response.ResponseBuilder responseBuilder = Response.ok();
-        return responseBuilder.build();
-    }
-
     private boolean isSessionActiveAndPasswordValid(SignRequest signRequest, UserModel userModel) {
         if (userModel == null) {
             return false;
         }
 
+        //TODO: add support for other authentication methods
         String password = signRequest.credentials().get("password");
         return password != null && userModel.credentialManager().isValid(UserCredentialModel.password(password));
     }

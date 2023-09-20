@@ -1,4 +1,4 @@
-package com.inventage.keycloak.reenterpasswordauthenticator.infrastructure.resource;
+package com.inventage.keycloak.signature.infrastructure.resource;
 
 import com.google.auto.service.AutoService;
 import org.keycloak.Config;
@@ -8,9 +8,9 @@ import org.keycloak.services.resource.RealmResourceProvider;
 import org.keycloak.services.resource.RealmResourceProviderFactory;
 
 @AutoService(org.keycloak.services.resource.RealmResourceProviderFactory.class)
-public class ReenterPasswordResourceProviderFactory implements RealmResourceProviderFactory {
+public class SignatureResourceProviderFactory implements RealmResourceProviderFactory {
 
-    private static final String ID = "signature-extension";
+    private static final String ID = "signature";
 
     @Override
     public String getId() {
@@ -19,7 +19,7 @@ public class ReenterPasswordResourceProviderFactory implements RealmResourceProv
 
     @Override
     public RealmResourceProvider create(KeycloakSession keycloakSession) {
-        return new ReenterPasswordResourceProvider(keycloakSession);
+        return new SignatureResourceProvider(keycloakSession);
     }
 
     @Override

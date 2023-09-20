@@ -2,11 +2,16 @@
 <html>
     <head>
         <title>Keycloak Signature</title>
-        <script type="module" src="./signature-extension/keycloak-signature.bundled.js"></script>
+        <script type="module" src="/keycloak-signature.bundled.js"></script>
     </head>
     <body>
         <h1>Keycloak Signature</h1>
-        <keycloak-signature>
+        <keycloak-signature
+                payload="keycloak page payload"
+                title="keycloak page Title"
+                accept="keycloak page Accept"
+                reject="keycloak page Reject"
+                max-nr-of-auth-attempts="5">
             <span>Keycloak Signature Custom Element from Keycloak loaded! <br/> <br/></span>
         </keycloak-signature>
     </body>
