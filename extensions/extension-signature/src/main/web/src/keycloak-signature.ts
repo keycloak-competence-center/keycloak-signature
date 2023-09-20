@@ -217,4 +217,10 @@ declare global {
   interface HTMLElementTagNameMap {
     'keycloak-signature': KeycloakSignature;
   }
+
+  interface ElementEventMap {
+    [SignatureEvents.signed]: CustomEvent<{ signedPayload: string }>;
+    [SignatureEvents.rejected]: CustomEvent<{ reason: string }>;
+    [SignatureEvents.failure]: CustomEvent;
+  }
 }
