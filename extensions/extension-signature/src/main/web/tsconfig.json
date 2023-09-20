@@ -31,5 +31,5 @@
     "types": ["mocha"]
   },
   "include": ["src/**/*.ts"],
-  "exclude": []
+  "exclude": ["src/**/*.spec.ts", "src/keycloak-page.ts"]
 }

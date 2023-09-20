@@ -1,43 +1,40 @@
 {
-  "name": "@lit/lit-starter-ts",
   "private": true,
-  "version": "1.0.5",
+  "name": "@lit/lit-starter-ts",
+  "version": "1.0.0",
   "description": "A simple web component",
-  "main": "keycloak-signature.js",
-  "module": "keycloak-signature.js",
+  "license": "MIT",
+  "author": "Inventage AG <info@inventage.com>",
   "type": "module",
+  "main": "dist/keycloak-signature.js",
+  "module": "dist/keycloak-signature.js",
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "build": "tsc && rollup -c",
+    "analyze": "cem analyze --litelement --globs \"src/**/*.ts\"",
+    "analyze:watch": "npm run analyze -- --watch",
+    "build": "npm run clean && tsc && rollup -c",
     "build:watch": "tsc --watch",
+    "checksize": "rollup -c ; cat keycloak-signature.bundled.js | gzip -9 | wc -c ; rm keycloak-signature.bundled.js",
     "clean": "rimraf dist",
+    "format": "prettier \"**/*.{cjs,html,js,json,md,ts}\" --ignore-path ./.eslintignore --write",
     "lint": "run-p -l lint:*",
     "lint:eslint": "eslint 'src/**/*.ts'",
     "lint:lit-analyzer": "lit-analyzer",
-    "format": "prettier \"**/*.{cjs,html,js,json,md,ts}\" --ignore-path ./.eslintignore --write",
-    "analyze": "cem analyze --litelement --globs \"src/**/*.ts\"",
-    "analyze:watch": "npm run analyze -- --watch",
     "serve": "wds --watch",
     "serve:prod": "MODE=prod npm run serve",
+    "start": "npm run serve",
     "test": "wtr",
-    "test:watch": "wtr --watch",
     "test:prod": "MODE=prod wtr",
     "test:prod:watch": "MODE=prod wtr --watch",
-    "checksize": "rollup -c ; cat keycloak-signature.bundled.js | gzip -9 | wc -c ; rm keycloak-signature.bundled.js"
+    "test:watch": "wtr --watch"
   },
-  "keywords": [
-    "web-components",
-    "lit-element",
-    "typescript",
-    "lit"
-  ],
-  "author": "Google LLC",
-  "license": "BSD-3-Clause",
+  "types": "dist/keycloak-signature.d.ts",
   "dependencies": {
     "lit": "^2.2.4"
   },
   "devDependencies": {
-    "@11ty/eleventy": "^1.0.1",
-    "@11ty/eleventy-plugin-syntaxhighlight": "^4.0.0",
     "@custom-elements-manifest/analyzer": "^0.6.3",
     "@open-wc/testing": "^3.1.5",
     "@rollup/plugin-node-resolve": "^13.3.0",
@@ -46,10 +43,8 @@
     "@typescript-eslint/parser": "^5.25.0",
     "@web/dev-server": "^0.1.31",
     "@web/dev-server-esbuild": "^0.4.1",
-    "@web/dev-server-legacy": "^1.0.0",
     "@web/test-runner": "^0.15.0",
     "@web/test-runner-playwright": "^0.9.0",
-    "@webcomponents/webcomponentsjs": "^2.6.0",
     "eslint": "^8.15.0",
     "koa-proxies": "^0.12.3",
     "lit-analyzer": "^1.2.1",
@@ -61,5 +56,11 @@
     "rollup-plugin-terser": "^7.0.2",
     "typescript": "~4.7.4"
   },
+  "keywords": [
+    "lit",
+    "lit-element",
+    "typescript",
+    "web-components"
+  ],
   "customElements": "custom-elements.json"
 }

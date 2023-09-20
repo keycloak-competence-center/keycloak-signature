@@ -4,9 +4,9 @@ import resolve from '@rollup/plugin-node-resolve';
 import replace from '@rollup/plugin-replace';
 
 export default {
-  input: 'keycloak-signature.js',
+  input: 'dist/keycloak-signature.js',
   output: {
-    file: 'keycloak-signature.bundled.js',
+    file: 'dist/keycloak-signature.bundled.js',
     format: 'esm',
   },
   onwarn(warning) {
@@ -15,17 +15,12 @@ export default {
     }
   },
   plugins: [
-    replace({'Reflect.decorate': 'undefined'}),
+    replace({'Reflect.decorate': 'undefined', preventAssignment: true}),
     resolve(),
     terser({
-      ecma: 2017,
+      ecma: 2020,
       module: true,
       warnings: true,
-      mangle: {
-        properties: {
-          regex: /^__/,
-        },
-      },
     }),
     summary(),
   ],
