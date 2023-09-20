@@ -21,7 +21,8 @@
     "format": "prettier \"**/*.{cjs,html,js,json,md,ts}\" --ignore-path ./.eslintignore --write",
     "lint": "run-p -l lint:*",
     "lint:eslint": "eslint 'src/**/*.ts'",
-    "lint:lit-analyzer": "lit-analyzer",
+    "lint:analyzer": "lit-analyzer",
+    "lint:types": "tsc --noEmit --pretty",
     "serve": "wds --watch",
     "serve:prod": "MODE=prod npm run serve",
     "start": "npm run serve",
@@ -55,7 +56,7 @@
     "rimraf": "^5.0.1",
     "rollup": "^3.29.2",
     "rollup-plugin-summary": "^2.0.0",
-    "typescript": "~5.2.2"
+    "typescript": "~4 <=4.9.3"
   },
   "keywords": [
     "lit",
