@@ -12,10 +12,9 @@
     "dist"
   ],
   "scripts": {
-    "analyze": "cem analyze --litelement --globs \"src/**/*.ts\"",
+    "analyze": "cem analyze",
     "analyze:watch": "npm run analyze -- --watch",
-    "build": "npm run clean && tsc && rollup -c",
-    "build:watch": "tsc --watch",
+    "build": "npm run clean && tsc && rollup -c && npm run analyze",
     "checksize": "rollup -c ; cat keycloak-signature.bundled.js | gzip -9 | wc -c ; rm keycloak-signature.bundled.js",
     "clean": "rimraf dist",
     "format": "run-s -l format:*",
