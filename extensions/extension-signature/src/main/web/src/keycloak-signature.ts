@@ -41,7 +41,7 @@ export class KeycloakSignature extends LitElement {
   private lastSignCallResultedInAuthenticationFailed = false
 
   @property({attribute: false})
-  private messageToShow: string = '';
+  private messageToShow = '';
 
   @query('#passwordId')
   private passwordInput?: HTMLInputElement;
