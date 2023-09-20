@@ -2,17 +2,40 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>&lt;my-element> Demo</title>
-    <script type="module" src="./src/keycloak-page.ts"></script>
+    <title>&lt;keycloak-signature> Demo</title>
+    <link href="./node_modules/normalize.css/normalize.css" rel="stylesheet" />
     <script type="module" src="./src/keycloak-signature.ts"></script>
     <style>
-      p {
-        border: solid 1px blue;
-        padding: 8px;
+      body {
+        padding: 1rem;
       }
     </style>
   </head>
   <body>
-    <keycloak-page></keycloak-page>
+    <h1><code>&lt;keycloak-signature></code> Demo</h1>
+
+    <keycloak-signature
+      payload="overwritten payload"
+      title="Overwritten Title"
+      accept="Overwritten Accept"
+      reject="Overwritten Reject"
+    >
+      <p>Overwritten Body</p>
+    </keycloak-signature>
+
+    <script>
+      const component = document.querySelector('keycloak-signature');
+      component.addEventListener('signed', (e) => {
+        console.log('signed', e);
+      });
+
+      component.addEventListener('rejected', (e) => {
+        console.log('rejected', e);
+      });
+
+      component.addEventListener('failure', (e) => {
+        console.log('failure', e);
+      });
+    </script>
   </body>
 </html>
