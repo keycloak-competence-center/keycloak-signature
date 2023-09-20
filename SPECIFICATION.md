@@ -6,9 +6,8 @@ The Keycloak Signature Extension gives Keycloak the ability to sign any values, 
 Specification
 ===
 
-:::info
-**This document is a draft and is still being edited.**
-:::
+> [!NOTE] 
+> **This document is a draft and is still being edited.**
 
 This extension can be used in 3 different ways:
 
