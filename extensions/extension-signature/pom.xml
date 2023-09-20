@@ -153,11 +153,6 @@
                                             <filtering>false</filtering>
                                         </resource>
                                     </resources>
-                                    <nonFilteredFileExtensions>
-                                        <nonFilteredFileExtension>pem</nonFilteredFileExtension>
-                                        <nonFilteredFileExtension>jks</nonFilteredFileExtension>
-                                        <nonFilteredFileExtension>jar</nonFilteredFileExtension>
-                                    </nonFilteredFileExtensions>
                                 </configuration>
                             </execution>
                         </executions>
