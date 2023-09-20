@@ -1,6 +1,4 @@
-:host {
-  display: block;
-  border: solid 1px gray;
-  padding: 16px;
-  max-width: 800px;
+.title {
+  font-size: var(--keycloak-signature-title-font-size, 2rem);
+  font-weight: var(--keycloak-signature-title-font-weight, bold);
 }

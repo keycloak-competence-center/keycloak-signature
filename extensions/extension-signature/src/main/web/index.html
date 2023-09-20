@@ -3,11 +3,34 @@
   <head>
     <meta charset="utf-8" />
     <title>&lt;keycloak-signature> Demo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
     <link href="./node_modules/normalize.css/normalize.css" rel="stylesheet" />
     <script type="module" src="./src/keycloak-signature.ts"></script>
     <style>
+      :root {
+        --keycloak-signature-title-font-size: 2.25rem;
+        --keycloak-signature-title-font-weight: bold;
+      }
+
       body {
         padding: 1rem;
+        font-family: 'Open Sans', sans-serif;
+      }
+
+      keycloak-signature {
+        display: block;
+        border: solid 1px lightgray;
+        padding: 1rem;
+        max-width: 512px;
+      }
+
+      keycloak-signature::part(title) {
+        margin-top: 0;
       }
     </style>
   </head>

@@ -50,7 +50,7 @@ export class KeycloakSignature extends LitElement {
     }
 
     return html`
-      <h1>${this.titleText}</h1>
+      <h1 class="title" part="title">${this.titleText}</h1>
       <slot>This is the body</slot>
       <label for="password">Password:</label>
       <form id="form">
