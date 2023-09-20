@@ -1,7 +1,13 @@
 import { CSSResultGroup, html, LitElement, nothing } from 'lit';
-import { customElement, property, query } from 'lit/decorators.js';
+import { customElement, property, state } from 'lit/decorators.js';
 
 import styles from './keycloak-signature.scss.js';
+
+enum SignatureEvents {
+  failure = 'failure',
+  signed = 'signed',
+  rejected = 'rejected',
+}
 
 /**
  * An example element.
@@ -37,11 +43,8 @@ export class KeycloakSignature extends LitElement {
   private attemptIndex = 1;
   private lastSignCallResultedInAuthenticationFailed = false;
 
-  @property({ attribute: false })
-  messageToShow = '';
-
-  @query('#passwordId')
-  passwordInput?: HTMLInputElement;
+  @state()
+  private messageToShow = '';
 
   override render() {
     if (!this.payload) {
@@ -50,28 +53,36 @@ export class KeycloakSignature extends LitElement {
     }
 
     return html`
-      <h1 class="title" part="title">${this.titleText}</h1>
-      <slot>This is the body</slot>
-      <label for="password">Password:</label>
-      <form id="form">
-        <input type="password" id="passwordId" name="password" /><br /><br />
-        <p style="color:#FF0000">${this.messageToShow}</p>
-        <button
-          type="submit"
-          id="acceptButton"
-          @click="${this.handleAcceptButtonClick}"
+      <div class="wrapper">
+        ${this.titleText
+          ? html`<h1 class="title" part="title">${this.titleText}</h1>`
+          : nothing}
+        <slot></slot>
+        <form
+          @submit="${this.handleFormSubmit}"
+          @reset="${this.handleFormReset}"
         >
-          ${this.acceptText}
-        </button>
-      </form>
-      <button id="rejectButton" @click="${this.handleRejectButtonClick}">
-        ${this.rejectText}
-      </button>
+          <label for="password">Password:</label>
+          <input type="password" id="password" name="password" /><br /><br />
+          <p style="color:#FF0000">${this.messageToShow}</p>
+          <button type="submit">${this.acceptText}</button>
+          <button type="reset">${this.rejectText}</button>
+        </form>
+      </div>
     `;
   }
 
-  private async handleAcceptButtonClick(event: Event) {
-    event.preventDefault();
+  private async handleFormSubmit(e: Event) {
+    e.preventDefault();
+
+    const form = e.target as HTMLFormElement;
+    const data = new FormData(form);
+    const password = data.get('password');
+    if (!password) {
+      console.error('No password given');
+      form.reset();
+      return;
+    }
 
     if (this.attemptIndex >= this.maxNrOfAuthAttempts) {
       this.messageToShow = 'Number of authentication attempts exceeded';
@@ -80,6 +91,7 @@ export class KeycloakSignature extends LitElement {
           'Failure during Signing: Authentication did not work. '
         );
       }
+      form.reset();
       return;
     }
 
@@ -90,7 +102,7 @@ export class KeycloakSignature extends LitElement {
       const data = {
         // Define the data you want to send in the request body
         payload: this.payload,
-        credentials: { password: this.passwordInput?.value },
+        credentials: { password },
       };
 
       const response = await fetch(url, {
@@ -131,48 +143,35 @@ export class KeycloakSignature extends LitElement {
       this.createAndDispatchFailureEvent(
         'Failure during Signing: Unexpected failure happened: : ' + error
       );
+    } finally {
+      form.reset();
     }
-
-    this.passwordInput!.value = '';
   }
 
-  private handleRejectButtonClick() {
-    console.log('Reject Button pressed');
-
-    this.createAndDispatchRejectEvent();
+  private handleFormReset() {
+    this.dispatchEvent(new CustomEvent(SignatureEvents.rejected));
   }
 
-  private createAndDispatchAcceptEvent(bodyJson: Record<string, string>) {
-    const eventSignedPayloadReceived = new CustomEvent('signed', {
-      detail: {
-        signedPayload: bodyJson.signedPayload,
-      },
-      bubbles: false,
-      composed: false,
-    });
-
-    this.dispatchEvent(eventSignedPayloadReceived);
+  private createAndDispatchAcceptEvent({
+    signedPayload,
+  }: Record<string, string>) {
+    this.dispatchEvent(
+      new CustomEvent(SignatureEvents.signed, {
+        detail: {
+          signedPayload,
+        },
+      })
+    );
   }
 
   private createAndDispatchFailureEvent(reason: String) {
-    const eventAuthenticationFailed = new CustomEvent('failure', {
-      detail: {
-        reason: reason,
-      },
-      bubbles: false,
-      composed: false,
-    });
-
-    this.dispatchEvent(eventAuthenticationFailed);
-  }
-
-  private createAndDispatchRejectEvent() {
-    const eventRejected = new CustomEvent('rejected', {
-      bubbles: false,
-      composed: false,
-    });
-
-    this.dispatchEvent(eventRejected);
+    this.dispatchEvent(
+      new CustomEvent(SignatureEvents.failure, {
+        detail: {
+          reason: reason,
+        },
+      })
+    );
   }
 }
 
