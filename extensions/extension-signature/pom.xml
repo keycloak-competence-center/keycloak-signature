@@ -136,11 +136,10 @@
                         </executions>
                     </plugin>
                     <plugin>
-                    <!-- substitute variables -->
                     <artifactId>maven-resources-plugin</artifactId>
                         <executions>
                             <execution>
-                                <id>substitute-keycloak-files</id>
+                                <id>copy-webcomponent-files</id>
                                 <phase>generate-resources</phase>
                                 <goals>
                                     <goal>copy-resources</goal>
