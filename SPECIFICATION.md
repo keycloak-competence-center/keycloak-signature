@@ -243,6 +243,23 @@ TODO: describe query parameters, payload, slot, title, accept, reject, authoriza
 This call fetches a page in which the custom element`<keycloak-signature></keycloak-signature>` is embedded. An arbitrary number of query parameters might be added to this call which will be handed over to the custom element. The [attributes section](#attributes) describes which attributes in the custom element are predefined and how they are interpreted.
 The response status code is 200.
 
+
+## Extension Configuration
+
+- Valid domains (for CORS)
+
+
+## Out of Scope
+
+- `additonal-properties` --> zusätzlicher JSON Parameter der Webkomponente
+- Keycloak Page
+- Configure Authentication Method
+- CORS: client configuration or set response header (Access-Control-Allow-Origin)
+
+## Archive
+
+![Architecture](https://dl.peschee.me/Untitled-2023-09-04-1428-EHqUXP.png)
+
 ## Integration Diagrams
 
 ### Using Minimum Variant
@@ -303,19 +320,3 @@ The response status code is 200.
     SPA->>API: /enterOrder with signature
     
 ```
-
-## Extension Configuration
-
-- Valid domains (for CORS)
-
-
-## Out of Scope
-
-- `additonal-properties` --> zusätzlicher JSON Parameter der Webkomponente
-- Keycloak Page
-- Configure Authentication Method
-- CORS: client configuration or set response header (Access-Control-Allow-Origin)
-
-## Archive
-
-![Architecture](https://dl.peschee.me/Untitled-2023-09-04-1428-EHqUXP.png)
