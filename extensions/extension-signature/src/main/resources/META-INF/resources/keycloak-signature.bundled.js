@@ -42,20 +42,24 @@ const nt=(t,e)=>"method"===e.kind&&e.descriptor&&!("value"in e.descriptor)?{...e
  * Copyright 2021 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
  */
-var rt;null===(rt=window.HTMLSlotElement)||void 0===rt||rt.prototype.assignedElements;var lt=function(t,e,i,s){for(var n,o=arguments.length,r=o<3?e:null===s?s=Object.getOwnPropertyDescriptor(e,i):s,l=t.length-1;l>=0;l--)(n=t[l])&&(r=(o<3?n(r):o>3?n(e,i,r):n(e,i))||r);return o>3&&r&&Object.defineProperty(e,i,r),r};let at=class extends it{constructor(){super(...arguments),this.signEndpoint="/realms/master/signature-extension/sign",this.titleText="Title",this.acceptText="Accept",this.rejectText="Reject",this.maxNrOfAuthAttempts=3,this.attemptIndex=1,this.lastSignCallResultedInAuthenticationFailed=!1,this.messageToShow=""}render(){return this.payload?j`
-      <p>
-        <h1>${this.titleText}</h1>
-        <slot>This is the body</slot>
-        <label for="password">Password:</label>
-        <form id="form">        
-          <input type="password" id="passwordId" name="password"><br><br>
-          <p style="color:#FF0000">
-            ${this.messageToShow}
-          </p>
-          <button type="submit" id="acceptButton" @click="${this.handleAcceptButtonClick}">${this.acceptText}</button>
-        </form>
-        <button id="rejectButton" @click="${this.handleRejectButtonClick}">${this.rejectText}</button>
-      </p>
+var rt;null===(rt=window.HTMLSlotElement)||void 0===rt||rt.prototype.assignedElements;var lt=function(t,e,i,s){for(var n,o=arguments.length,r=o<3?e:null===s?s=Object.getOwnPropertyDescriptor(e,i):s,l=t.length-1;l>=0;l--)(n=t[l])&&(r=(o<3?n(r):o>3?n(e,i,r):n(e,i))||r);return o>3&&r&&Object.defineProperty(e,i,r),r};let at=class extends it{constructor(){super(...arguments),this.signEndpoint="/realms/master/signature/sign",this.titleText="Title",this.acceptText="Accept",this.rejectText="Reject",this.maxNrOfAuthAttempts=3,this.attemptIndex=1,this.lastSignCallResultedInAuthenticationFailed=!1,this.messageToShow=""}render(){return this.payload?j`
+      <h1>${this.titleText}</h1>
+      <slot>This is the body</slot>
+      <label for="password">Password:</label>
+      <form id="form">
+        <input type="password" id="passwordId" name="password" /><br /><br />
+        <p style="color:#FF0000">${this.messageToShow}</p>
+        <button
+          type="submit"
+          id="acceptButton"
+          @click="${this.handleAcceptButtonClick}"
+        >
+          ${this.acceptText}
+        </button>
+      </form>
+      <button id="rejectButton" @click="${this.handleRejectButtonClick}">
+        ${this.rejectText}
+      </button>
     `:(console.warn("No valid payload provided."),M)}async handleAcceptButtonClick(t){if(t.preventDefault(),this.attemptIndex>=this.maxNrOfAuthAttempts)return this.messageToShow="Number of authentication attempts exceeded",void(this.lastSignCallResultedInAuthenticationFailed&&this.createAndDispatchFailureEvent("Failure during Signing: Authentication did not work. "));console.log("handleAcceptButtonClick: ");try{const t=this.signEndpoint,e={payload:this.payload,credentials:{password:this.passwordInput?.value}},i=await fetch(t,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(e)});if(i.ok){console.log("POST request successful");const t=await i.json();this.lastSignCallResultedInAuthenticationFailed=!1,this.attemptIndex=this.maxNrOfAuthAttempts,this.createAndDispatchAcceptEvent(t)}else 403===i.status?(console.log("403: authentication failed",this.attemptIndex),this.messageToShow="Wrong password",this.lastSignCallResultedInAuthenticationFailed=!0,this.attemptIndex++):(console.error("POST request failed"),this.messageToShow="Something unexpected happened",this.lastSignCallResultedInAuthenticationFailed=!1,this.attemptIndex=this.maxNrOfAuthAttempts,this.createAndDispatchFailureEvent("Failure during Signing: Unexpected failure happened. Status response of Keycloak is: "+i.statusText))}catch(t){console.error("Error:",t),this.messageToShow="Something unexpected happened",this.lastSignCallResultedInAuthenticationFailed=!1,this.attemptIndex=this.maxNrOfAuthAttempts,this.createAndDispatchFailureEvent("Failure during Signing: Unexpected failure happened: : "+t)}this.passwordInput.value=""}handleRejectButtonClick(){console.log("Reject Button pressed"),this.createAndDispatchRejectEvent()}createAndDispatchAcceptEvent(t){const e=new CustomEvent("signed",{detail:{signedPayload:t.signedPayload},bubbles:!1,composed:!1});this.dispatchEvent(e)}createAndDispatchFailureEvent(t){const e=new CustomEvent("failure",{detail:{reason:t},bubbles:!1,composed:!1});this.dispatchEvent(e)}createAndDispatchRejectEvent(){const t=new CustomEvent("rejected",{bubbles:!1,composed:!1});this.dispatchEvent(t)}};at.styles=((t,...e)=>{const s=1===t.length?t[0]:e.reduce(((e,i,s)=>e+(t=>{if(!0===t._$cssResult$)return t.cssText;if("number"==typeof t)return t;throw Error("Value passed to 'css' function must be a 'css' function result: "+t+". Use 'unsafeCSS' to pass non-literal values, but take care to ensure page security.")})(i)+t[s+1]),t[0]);return new n(s,t,i)})`
     :host {
       display: block;

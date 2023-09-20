@@ -154,10 +154,13 @@
                                     <goal>copy-resources</goal>
                                 </goals>
                                 <configuration>
-                                    <outputDirectory>src/main/resources/theme/signature/resources/js</outputDirectory>
+                                    <outputDirectory>src/main/resources/META-INF/resources</outputDirectory>
                                     <resources>
                                         <resource>
                                             <directory>${project.basedir}/src/main/web/dist</directory>
+                                            <includes>
+                                                <include>keycloak-signature.bundled.js</include>
+                                            </includes>
                                             <filtering>false</filtering>
                                         </resource>
                                     </resources>
