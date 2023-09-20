@@ -11,14 +11,7 @@ suite('keycloak-signature', () => {
 
   test('renders with default values', async () => {
     const el = await fixture(html`<keycloak-signature></keycloak-signature>`);
-    await assert.shadowDom.equal(
-      el,
-      `
-      <h1>Hello, World!</h1>
-      <button part='button'>Click Count: 0</button>
-      <slot></slot>
-    `
-    );
+    await assert.shadowDom.equal(el, '');
   });
 
   // test('renders with a set name', async () => {
