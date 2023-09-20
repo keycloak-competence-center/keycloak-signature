@@ -1,7 +1,7 @@
-import {promises as fs} from 'node:fs';
-import {basename, dirname} from 'node:path';
+import { promises as fs } from 'node:fs';
+import { basename, dirname } from 'node:path';
 import fg from 'fast-glob';
-import {compileString} from 'sass';
+import { compileString } from 'sass';
 
 const files = await fg('./src/**/*.scss');
 
@@ -13,13 +13,13 @@ await Promise.allSettled(
   files.map(async (file) => {
     try {
       // Step 1: compile SCSS to CSS
-      const {css} = compileString(
+      const { css } = compileString(
         `
           ${shared ? `@import '${sharedFile}';` : ''}
 
           ${await fs.readFile(file, 'utf8')}
         `,
-        {loadPaths: shared ? [sharedDir] : undefined}
+        { loadPaths: shared ? [sharedDir] : undefined }
       );
 
       const output = css

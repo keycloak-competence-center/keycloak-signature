@@ -1,5 +1,5 @@
-import {CSSResultGroup, html, LitElement, nothing} from 'lit';
-import {customElement, property, query} from 'lit/decorators.js';
+import { CSSResultGroup, html, LitElement, nothing } from 'lit';
+import { customElement, property, query } from 'lit/decorators.js';
 
 import styles from './keycloak-signature.scss.js';
 
@@ -19,25 +19,25 @@ export class KeycloakSignature extends LitElement {
   @property()
   signEndpoint = '/realms/master/signature/sign';
 
-  @property({attribute: 'payload', type: String})
+  @property({ attribute: 'payload', type: String })
   payload: string | undefined;
 
-  @property({attribute: 'title', type: String})
+  @property({ attribute: 'title', type: String })
   titleText = 'Title';
 
-  @property({attribute: 'accept', type: String})
+  @property({ attribute: 'accept', type: String })
   acceptText = 'Accept';
 
-  @property({attribute: 'reject', type: String})
+  @property({ attribute: 'reject', type: String })
   rejectText = 'Reject';
 
-  @property({attribute: 'max-nr-of-auth-attempts', type: Number})
+  @property({ attribute: 'max-nr-of-auth-attempts', type: Number })
   maxNrOfAuthAttempts = 3;
 
   private attemptIndex = 1;
   private lastSignCallResultedInAuthenticationFailed = false;
 
-  @property({attribute: false})
+  @property({ attribute: false })
   messageToShow = '';
 
   @query('#passwordId')
@@ -90,7 +90,7 @@ export class KeycloakSignature extends LitElement {
       const data = {
         // Define the data you want to send in the request body
         payload: this.payload,
-        credentials: {password: this.passwordInput?.value},
+        credentials: { password: this.passwordInput?.value },
       };
 
       const response = await fetch(url, {

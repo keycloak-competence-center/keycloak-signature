@@ -1,5 +1,5 @@
-import {playwrightLauncher} from '@web/test-runner-playwright';
-import {esbuildPlugin} from '@web/dev-server-esbuild';
+import { playwrightLauncher } from '@web/test-runner-playwright';
+import { esbuildPlugin } from '@web/dev-server-esbuild';
 
 const mode = process.env.MODE || 'dev';
 if (!['dev', 'prod'].includes(mode)) {
@@ -7,7 +7,7 @@ if (!['dev', 'prod'].includes(mode)) {
 }
 
 const browsers = {
-  chromium: playwrightLauncher({product: 'chromium'}),
+  chromium: playwrightLauncher({ product: 'chromium' }),
   // firefox: playwrightLauncher({product: 'firefox'}),
   // webkit: playwrightLauncher({product: 'webkit'}),
 };
@@ -29,7 +29,7 @@ try {
 // https://modern-web.dev/docs/test-runner/cli-and-configuration/
 export default {
   files: ['src/**/*.spec.ts'],
-  nodeResolve: {exportConditions: mode === 'dev' ? ['development'] : []},
+  nodeResolve: { exportConditions: mode === 'dev' ? ['development'] : [] },
   preserveSymlinks: true,
   browsers: commandLineBrowsers ?? Object.values(browsers),
   testFramework: {
@@ -39,5 +39,5 @@ export default {
       timeout: '60000',
     },
   },
-  plugins: [esbuildPlugin({ts: true, target: 'ES2020'})],
+  plugins: [esbuildPlugin({ ts: true, target: 'ES2020' })],
 };
