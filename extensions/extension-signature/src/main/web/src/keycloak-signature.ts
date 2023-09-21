@@ -126,6 +126,7 @@ export class KeycloakSignature extends LitElement {
 
         this.lastSignCallResultedInAuthenticationFailed = false;
         this.attemptIndex = this.maxNrOfAuthAttempts;
+        this.messageToShow = '';
         this.createAndDispatchAcceptEvent(bodyJson);
       } else if (response.status === 403) {
         console.warn('Authentication failed (403).', this.attemptIndex);

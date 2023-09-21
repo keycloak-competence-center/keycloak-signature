@@ -39,6 +39,15 @@ public class SignatureResource {
     public Response getPage(@QueryParam("payload") String description) {
         // TODO: check if correct realm
         LOGGER.debugf("getPage: / endpoint called");
+
+        AuthenticationManager.AuthResult authResult = AuthenticationManager.authenticateIdentityCookie(session,
+                session.getContext().getRealm(), true);
+
+        if (authResult == null) {
+            LOGGER.debugf("getPage: No active session present");
+            return Response.status(403).build();
+        }
+
         final InputStream indexHtml = this.getClass().getClassLoader().getResourceAsStream("theme/signature/templates/index.html");
         final Response.ResponseBuilder responseBuilder = Response.ok(indexHtml).cacheControl(CacheControlUtil.getDefaultCacheControl());
         return responseBuilder.build();
@@ -53,20 +62,21 @@ public class SignatureResource {
         // TODO: CORS
         LOGGER.debugf("sign: /sign (POST) endpoint called");
 
-        final JsonObject token = getJwtToken(session.getContext().getHttpRequest());
-        if (token == null) {
-            LOGGER.debugf("sign: No token provided");
+        AuthenticationManager.AuthResult authResult = AuthenticationManager.authenticateIdentityCookie(session,
+                session.getContext().getRealm(), true);
+
+        if (authResult == null || authResult.getUser() == null) {
+            LOGGER.debugf("sign: No active session present");
             return Response.status(403).build();
         }
 
-        final UserModel userModel = getUserModel(token);
-        if (!isSessionActiveAndPasswordValid(signRequest, userModel)) {
-            LOGGER.debugf("sign: No active session present or password is incorrect");
+        final UserModel userModel = authResult.getUser();
+        if (!isPasswordValid(signRequest, userModel)) {
+            LOGGER.debugf("sign: Password is incorrect");
             return Response.status(403).build();
         }
 
         final JsonObject signedPayloadJson = createAndSerializeToken(signRequest, userModel);
-
         final Response.ResponseBuilder responseBuilder = Response
                 .ok()
                 .entity(signedPayloadJson);
@@ -86,41 +96,9 @@ public class SignatureResource {
         return JsonObject.of("signedPayload", signedPayloadToken);
     }
 
-    private boolean isSessionActiveAndPasswordValid(SignRequest signRequest, UserModel userModel) {
-        if (userModel == null) {
-            return false;
-        }
-
+    private boolean isPasswordValid(SignRequest signRequest, UserModel userModel) {
         //TODO: add support for other authentication methods
         String password = signRequest.credentials().get("password");
         return password != null && userModel.credentialManager().isValid(UserCredentialModel.password(password));
-    }
-
-    private UserModel getUserModel(JsonObject token) {
-        final UserSessionModel userSessionModel = session
-            .sessions()
-            .getUserSession(
-                session.getContext().getRealm(),
-                token.getString("sid")
-            );
-
-        if (userSessionModel == null) {
-            return null;
-        }
-
-        final UserModel user = userSessionModel.getUser();
-        return user;
-    }
-
-    private JsonObject getJwtToken(HttpRequest request) {
-        final Cookie cookie = request.getHttpHeaders().getCookies().get(AuthenticationManager.KEYCLOAK_IDENTITY_COOKIE);
-
-        if (cookie != null) {
-            final String jwt = cookie.getValue();
-            final String claims = new String(Base64.getUrlDecoder().decode(jwt.split("\\.")[1]));
-            return (JsonObject) Json.decodeValue(claims);
-        }
-
-        return null;
     }
 }
