@@ -154,7 +154,7 @@
                                     <goal>copy-resources</goal>
                                 </goals>
                                 <configuration>
-                                    <outputDirectory>src/main/resources/META-INF/resources</outputDirectory>
+                                    <outputDirectory>src/main/resources/META-INF/resources/extension-signature</outputDirectory>
                                     <resources>
                                         <resource>
                                             <directory>${project.basedir}/src/main/web/dist</directory>
