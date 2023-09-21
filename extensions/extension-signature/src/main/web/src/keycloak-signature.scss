@@ -13,3 +13,44 @@
   font-weight: var(--keycloak-signature-password-font-weight, normal);
   color: var(--keycloak-signature-password-color, #000);
 }
+
+.accept-button {
+  font-size: var(--keycloak-signature-accept-button-font-size, 1rem);
+  font-weight: var(--keycloak-signature-accept-button-font-weight, normal);
+  color: var(--keycloak-signature-accept-button-color, black);
+  background-color: var(
+    --keycloak-signature-accept-button-background-color,
+    white
+  );
+  border: var(--keycloak-signature-accept-button-border, 0.25rem solid #4caf50);
+  padding: var(--keycloak-signature-accept-button-padding, 0.25rem 0.5rem);
+  text-align: var(--keycloak-signature-accept-button-text-align, center);
+  text-decoration: var(
+    --keycloak-signature-accept-button-text-decoration,
+    none
+  );
+  display: var(--keycloak-signature-accept-button-display, inline-block);
+}
+
+.reject-button {
+  font-size: var(--keycloak-signature-reject-button-font-size, 1rem);
+  font-weight: var(--keycloak-signature-reject-button-font-weight, normal);
+  color: var(--keycloak-signature-reject-button-color, black);
+  background-color: var(
+    --keycloak-signature-reject-button-background-color,
+    white
+  );
+  border: var(--keycloak-signature-reject-button-border, 0.25rem solid red);
+  padding: var(--keycloak-signature-reject-button-padding, 0.25rem 0.5rem);
+  text-align: var(--keycloak-signature-reject-button-text-align, center);
+  text-decoration: var(
+    --keycloak-signature-reject-button-text-decoration,
+    none
+  );
+  display: var(--keycloak-signature-reject-button-display, inline-block);
+}
+
+.message-text {
+  color: var(--keycloak-signature-message-text-color, red);
+  font-size: var(--keycloak-signature-message-font-size, 1rem);
+}

@@ -47,12 +47,10 @@ public class PayloadToken extends DefaultActionToken {
     public String serialize(KeycloakSession session, RealmModel realm, UriInfo uri) {
         String issuerUri = getIssuer(realm, uri);
 
-        this
-                .iat((long) Time.currentTime())
-                .id(getActionVerificationNonce().toString())
-                .issuer(issuerUri)
-                .exp(null); // remove expiration from token
-
+        this.iat((long) Time.currentTime())
+            .id(getActionVerificationNonce().toString())
+            .issuer(issuerUri)
+            .exp(null); // remove expiration from token
 
         return session.tokens().encode(this);
     }

@@ -55,13 +55,13 @@ public class SignatureResource {
 
         final JsonObject token = getJwtToken(session.getContext().getHttpRequest());
         if (token == null) {
-            LOGGER.debugf("sign: no token provided");
+            LOGGER.debugf("sign: No token provided");
             return Response.status(403).build();
         }
 
         final UserModel userModel = getUserModel(token);
         if (!isSessionActiveAndPasswordValid(signRequest, userModel)) {
-            LOGGER.debugf("sign: no active session or password is incorrect");
+            LOGGER.debugf("sign: No active session present or password is incorrect");
             return Response.status(403).build();
         }
 

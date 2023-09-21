@@ -15,7 +15,7 @@ enum SignatureEvents {
  * 2. Renders what is provided in the <slot> element
  * 3. Includes elements necessary for authentication (e.g. password input)
  * 4. Provides an accept button
- * 5. Provides an reject button
+ * 5. Provides a reject button
  *
  * @slot - This element has a slot
  * @csspart button - The button
@@ -44,11 +44,11 @@ export class KeycloakSignature extends LitElement {
   @property({ attribute: 'max-nr-of-auth-attempts', type: Number })
   maxNrOfAuthAttempts = 3;
 
-  private attemptIndex = 1;
-  private lastSignCallResultedInAuthenticationFailed = false;
-
   @state()
   private messageToShow = '';
+
+  private attemptIndex = 1;
+  private lastSignCallResultedInAuthenticationFailed = false;
 
   override render() {
     if (!this.payload) {
@@ -63,13 +63,21 @@ export class KeycloakSignature extends LitElement {
           : nothing}
         <slot><p>Please provide your credentials below</p></slot>
         <form @submit="${this.handleFormSubmit}">
-          <label class="password"
-            >Password:
+          <label class="password" part="password"
+            >Password <br />
+            <br />
             <input type="password" id="password" name="password" /><br /><br />
           </label>
-          <p style="color:#FF0000">${this.messageToShow}</p>
-          <button type="submit">${this.acceptText}</button>
-          <button @click="${this.handleResetButton}" type="reset">
+          <p class="message-text" part="message-text">${this.messageToShow}</p>
+          <button class="accept-button" part="accept-button" type="submit">
+            ${this.acceptText}
+          </button>
+          <button
+            class="reject-button"
+            part="reject-button"
+            @click="${this.handleResetButton}"
+            type="reset"
+          >
             ${this.rejectText}
           </button>
         </form>
@@ -78,8 +86,6 @@ export class KeycloakSignature extends LitElement {
   }
 
   private async handleFormSubmit(e: Event) {
-    console.log('handleFormSubmit: ');
-
     e.preventDefault();
     const form = e.target as HTMLFormElement;
     const data = new FormData(form);
@@ -116,17 +122,16 @@ export class KeycloakSignature extends LitElement {
       });
 
       if (response.ok) {
-        console.log('POST request successful');
         const bodyJson = await response.json();
 
         this.lastSignCallResultedInAuthenticationFailed = false;
         this.attemptIndex = this.maxNrOfAuthAttempts;
         this.createAndDispatchAcceptEvent(bodyJson);
       } else if (response.status === 403) {
-        console.log('403: authentication failed', this.attemptIndex);
+        console.warn('Authentication failed (403).', this.attemptIndex);
         this.handleWrongPasswordEntered();
       } else {
-        console.error('POST request failed');
+        console.error('Unexpected failure response received.');
         this.handleUnexpectedFailureReponse(response);
       }
     } catch (error) {

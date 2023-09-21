@@ -167,7 +167,9 @@ The default signing algorithm is **RS256**, however it can be configured with `d
 
 This extension also provides a `<keycloak-signature>` [custom element](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements).
 
-![](https://hedgedoc.inventage.com/uploads/7d90197d-0f72-4f69-972c-8c1ee16300ed.png)
+![](https://hedgedoc.inventage.com/uploads/6b597a4f-49c8-49c9-9be1-ad3e0aae66b4.png)
+
+
 
 The [web component](https://developer.mozilla.org/en-US/docs/Web/API/Web_components) is structured as follows:
 
@@ -175,7 +177,7 @@ The [web component](https://developer.mozilla.org/en-US/docs/Web/API/Web_compone
 2. Renders what is provided in the `<slot>` element
 3. Includes elements necessary for authentication (e.g. password input)
 4. Provides an accept button
-5. Provides an reject button
+5. Provides a reject button
 
 ### API
 
@@ -207,13 +209,26 @@ The [web component](https://developer.mozilla.org/en-US/docs/Web/API/Web_compone
 
 #### CSS Shadow Parts
 
-> [!NOTE]
-> **Not defined yet…**
 
+| Part            | Description                          |
+| --------------- | ------------------------------------ |
+| `title`         | Representing the title               |
+| `password`      | Representing the password            |
+| `message-text`  | Representing the text of the message |
+| `accept-button` | Representing the accept button       |
+| `reject-button` | Representing the reject button       |
 
-| Part          | Description                 |
-| ------------- | --------------------------- |
-| `placeholder` | Placeholder css shadow part |
+**Example**
+
+```htmlbars=
+<style>
+      keycloak-signature::part(title) {
+        margin-top: 0;
+        color: green;
+      }
+</style>
+```
+
 
 #### CSS Custom Properties
 
