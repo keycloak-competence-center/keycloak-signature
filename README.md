@@ -63,8 +63,8 @@ Development of the initial version was sponsored by [Körber Pharma](https://www
 
 ## Support
 
-For more support for this extension or your Keycloak project in general have a look
-at [keycloak.ch](https://keycloak.ch)
+For more support for this extension or your Keycloak project in general, visit [Keycloak Competence Center Switzerland]
+(https://keycloak.ch)
 
 [Keycloak]: https://keycloak.org
 [Keycloak.X]: https://www.keycloak.org/migration/migrating-to-quarkus
