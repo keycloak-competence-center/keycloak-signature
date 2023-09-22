@@ -1,0 +1,8 @@
+{
+  "ignore": {
+    "typescript": {
+      "versions": ">=5",
+      "reason": "Not working with lit-analyzer"
+    }
+  }
+}
