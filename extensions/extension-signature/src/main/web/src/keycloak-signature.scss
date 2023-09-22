@@ -5,13 +5,13 @@
 .title {
   font-size: var(--keycloak-signature-title-font-size, 2rem);
   font-weight: var(--keycloak-signature-title-font-weight, bold);
-  color: var(--keycloak-signature-title-color, #000);
+  color: var(--keycloak-signature-title-color, black);
 }
 
 .password {
   font-size: var(--keycloak-signature-password-font-size, 1rem);
   font-weight: var(--keycloak-signature-password-font-weight, normal);
-  color: var(--keycloak-signature-password-color, #000);
+  color: var(--keycloak-signature-password-color, black);
 }
 
 .accept-button {
@@ -22,7 +22,7 @@
     --keycloak-signature-accept-button-background-color,
     white
   );
-  border: var(--keycloak-signature-accept-button-border, 0.25rem solid #4caf50);
+  border: var(--keycloak-signature-accept-button-border, 0.25rem solid green);
   padding: var(--keycloak-signature-accept-button-padding, 0.25rem 0.5rem);
   text-align: var(--keycloak-signature-accept-button-text-align, center);
   text-decoration: var(
