@@ -39,20 +39,21 @@ This project creates a custom [Keycloak] server based on [Keycloak.X]. It is str
 - `server`: provides a Keycloak installation for local development & testing
 - `themes`: provides samples for custom themes
 
-Please see the [tutorial of custom Keycloak](https://keycloak.ch/keycloak-tutorials/tutorial-custom-keycloak/) for more details of this project.
+Please refer to the [tutorial of custom Keycloak](https://keycloak.ch/keycloak-tutorials/tutorial-custom-keycloak/) for more details of this project.
 
 ### Requirements
 
-Please have a loot at the [requirements of custom Keycloak](https://keycloak.ch/keycloak-tutorials/tutorial-custom-keycloak/#requirements).
+Please have a look at the [requirements of custom Keycloak](https://keycloak.ch/keycloak-tutorials/tutorial-custom-keycloak/#requirements).
 
-For this project you also need:
+For this project, you also need:
 
 - [Node.js]
 
 ### Getting Started
 
 - Please have a look at [how you can run custom Keycloak](https://keycloak.ch/keycloak-tutorials/tutorial-custom-keycloak/#usage).
-- In order to develop on the `<keycloak-signature>` component you can use the web dev server. Run following command under `./extensions/extension-signature/src/main/web`:
+- In order to develop on the `<keycloak-signature>` component you can use the web dev server. Run the following command under `./extensions/extension-signature/src/main/web`:
+
     ```shell
     npm start
     ```
