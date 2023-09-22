@@ -2,6 +2,7 @@ import { promises as fs } from 'node:fs';
 import { basename, dirname } from 'node:path';
 import fg from 'fast-glob';
 import { compileString } from 'sass';
+import stylelint from 'stylelint';
 
 const files = await fg('./src/**/*.scss');
 
@@ -22,7 +23,10 @@ await Promise.allSettled(
         { loadPaths: shared ? [sharedDir] : undefined }
       );
 
-      const output = css
+      // Step 2: lint CSS
+      let { output } = await stylelint.lint({ code: css, fix: true });
+
+      output = output
         .toString()
         .split('\n')
         .map((string_) => `  ${string_}`.trimEnd())
