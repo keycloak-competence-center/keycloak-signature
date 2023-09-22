@@ -9,6 +9,9 @@ import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
 import org.keycloak.services.Urls;
 
+/**
+ * Custom Token
+ */
 public class PayloadToken extends DefaultActionToken {
 
     public static final String TOKEN_TYPE = "signed-payload-token";
