@@ -59,7 +59,7 @@ For this project you also need:
      
 ## Sponsors
 
-[koerber](https://koerber-pharma.com)
+Development of the initial version was sponsored by [Körber Pharma](https://www.koerber-pharma.com/)
 
 ## Support
 
