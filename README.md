@@ -68,4 +68,4 @@ at [keycloak.ch](https://keycloak.ch)
 
 [Keycloak]: https://keycloak.org
 [Keycloak.X]: https://www.keycloak.org/migration/migrating-to-quarkus
-[Node.js](https://nodejs.org/)
+[Node.js]: https://nodejs.org/
