@@ -47,7 +47,7 @@ Please have a loot at the [requirements of custom Keycloak](https://keycloak.ch/
 
 For this project you also need:
 
-- Node
+- [Node.js]
 
 ### Getting Started
 
@@ -66,6 +66,6 @@ Development of the initial version was sponsored by [Körber Pharma](https://www
 For more support for this extension or your Keycloak project in general have a look
 at [keycloak.ch](https://keycloak.ch)
 
-
 [Keycloak]: https://keycloak.org
 [Keycloak.X]: https://www.keycloak.org/migration/migrating-to-quarkus
+[Node.js](https://nodejs.org/)
