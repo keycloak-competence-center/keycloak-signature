@@ -39,33 +39,34 @@ This project creates a custom [Keycloak] server based on [Keycloak.X]. It is str
 - `server`: provides a Keycloak installation for local development & testing
 - `themes`: provides samples for custom themes
 
-Please see the [tutorial of custom Keycloak](https://keycloak.ch/keycloak-tutorials/tutorial-custom-keycloak/) for more details of this project.
+Please refer to the [tutorial of custom Keycloak](https://keycloak.ch/keycloak-tutorials/tutorial-custom-keycloak/) for more details of this project.
 
 ### Requirements
 
-Please have a loot at the [requirements of custom Keycloak](https://keycloak.ch/keycloak-tutorials/tutorial-custom-keycloak/#requirements).
+Please have a look at the [requirements of custom Keycloak](https://keycloak.ch/keycloak-tutorials/tutorial-custom-keycloak/#requirements).
 
-For this project you also need:
+For this project, you also need:
 
-- Node
+- [Node.js]
 
 ### Getting Started
 
 - Please have a look at [how you can run custom Keycloak](https://keycloak.ch/keycloak-tutorials/tutorial-custom-keycloak/#usage).
-- In order to develop on the `<keycloak-signature>` component you can use the web dev server. Run following command under `./extensions/extension-signature/src/main/web`:
+- In order to develop on the `<keycloak-signature>` component you can use the web dev server. Run the following command under `./extensions/extension-signature/src/main/web`:
+
     ```shell
     npm start
     ```
      
 ## Sponsors
 
-[koerber](https://koerber-pharma.com)
+Development of the initial version was sponsored by [Körber Pharma](https://www.koerber-pharma.com/)
 
 ## Support
 
-For more support for this extension or your Keycloak project in general have a look
-at [keycloak.ch](https://keycloak.ch)
-
+For more support for this extension or your Keycloak project in general, visit [Keycloak Competence Center Switzerland]
+(https://keycloak.ch)
 
 [Keycloak]: https://keycloak.org
 [Keycloak.X]: https://www.keycloak.org/migration/migrating-to-quarkus
+[Node.js]: https://nodejs.org/
