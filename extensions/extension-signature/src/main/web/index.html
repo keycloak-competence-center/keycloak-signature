@@ -12,23 +12,21 @@
     <link href="./node_modules/normalize.css/normalize.css" rel="stylesheet" />
     <script type="module" src="./src/keycloak-signature.ts"></script>
     <style>
-      :root {
-        --keycloak-signature-title-font-size: 2.25rem;
-        --keycloak-signature-title-font-weight: bold;
-      }
-
       body {
         padding: 1rem;
         font-family: 'Open Sans', sans-serif;
       }
 
-      keycloak-signature {
+      .signature-custom {
+        --keycloak-signature-title-font-size: 2.25rem;
+        --keycloak-signature-title-font-weight: bold;
+
         border: solid 1px lightgray;
         padding: 1rem;
         max-width: 512px;
       }
 
-      keycloak-signature::part(title) {
+      .signature-custom::part(title) {
         margin-top: 0;
       }
     </style>
@@ -36,8 +34,15 @@
   <body>
     <h1><code>&lt;keycloak-signature></code> Demo</h1>
 
+    <h2>Default</h2>
     <keycloak-signature
-      payload="overwritten payload"
+      payload="F42AE53B-E124-4B6A-9B1A-1A8D518A5D83"
+    ></keycloak-signature>
+
+    <h2>Custom</h2>
+    <keycloak-signature
+      class="signature-custom"
+      payload="67B8AE63-2E1A-4992-B98A-41290A077FC9"
       title="Overwritten Title"
       accept="Overwritten Accept"
       reject="Overwritten Reject"
