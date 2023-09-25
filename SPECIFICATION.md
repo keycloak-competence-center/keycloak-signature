@@ -74,7 +74,7 @@ components:
 
 **Request:**
 
-This endpoint expects an Keycloak Identity Cookie and a request body which contains the payload and credentials as JSON.
+This endpoint expects an Keycloak Identity Cookie (which means the user has to be a valid session) and a request body which contains the payload and credentials as JSON.
 
 - `KEYCLOAK_IDENTITY`: This Session Cookie will be used to identify the user and validate the current session.
 - `payload`: String value which is going to be inserted into the JWT. We recommend you to encode your payload into  **Base64**.
