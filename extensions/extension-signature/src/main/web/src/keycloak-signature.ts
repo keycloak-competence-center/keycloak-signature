@@ -1,12 +1,19 @@
 import { CSSResultGroup, html, LitElement, nothing } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { customElement, property } from 'lit/decorators.js';
 
 import styles from './keycloak-signature.scss.js';
 
 enum SignatureEvents {
-  failure = 'failure',
+  failed = 'failed',
   signed = 'signed',
   rejected = 'rejected',
+}
+
+enum FailureReasons {
+  credentialsWrong = 'credentials-wrong',
+  maxNrOfAuthAttemptsExceeded = 'max-nr-of-auth-attempts-exceeded',
+  credentialsEmpty = 'credentials-empty',
+  unexpectedError = 'unexpected-error',
 }
 
 /**
@@ -44,11 +51,9 @@ export class KeycloakSignature extends LitElement {
   @property({ attribute: 'max-nr-of-auth-attempts', type: Number })
   maxNrOfAuthAttempts = 3;
 
-  @state()
-  private messageToShow = '';
+  private attemptIndex = 0;
 
-  private attemptIndex = 1;
-  private lastSignCallResultedInAuthenticationFailed = false;
+  private terminatingEventSent: boolean = false;
 
   override render() {
     if (!this.payload) {
@@ -68,14 +73,13 @@ export class KeycloakSignature extends LitElement {
             <br />
             <input type="password" id="password" name="password" /><br /><br />
           </label>
-          <p class="message-text" part="message-text">${this.messageToShow}</p>
           <button class="accept-button" part="accept-button" type="submit">
             ${this.acceptText}
           </button>
           <button
             class="reject-button"
             part="reject-button"
-            @click="${this.handleResetButton}"
+            @click="${this.handleRejectButton}"
             type="reset"
           >
             ${this.rejectText}
@@ -90,109 +94,97 @@ export class KeycloakSignature extends LitElement {
     const form = e.target as HTMLFormElement;
     const data = new FormData(form);
     const password = data.get('password');
-    if (!password) {
-      this.noPasswordEntered(form);
+
+    if (this.terminatingEventSent) {
       return;
     }
+
     if (this.attemptIndex >= this.maxNrOfAuthAttempts) {
       this.maxNrOfAuthAttemptsExceeded(form);
       return;
     }
+    if (!password) {
+      this.noPasswordEntered(form);
+      return;
+    }
 
-    await this.makeSignRequest(form, password);
-  }
-
-  private async makeSignRequest(
-    form: HTMLFormElement,
-    password: FormDataEntryValue
-  ) {
     try {
-      const url = this.signEndpoint;
-      const data = {
-        payload: this.payload,
-        credentials: { password },
-      };
-
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
+      const response = await this.makeSignRequest(password);
 
       if (response.ok) {
         const bodyJson = await response.json();
 
-        this.lastSignCallResultedInAuthenticationFailed = false;
         this.attemptIndex = this.maxNrOfAuthAttempts;
-        this.messageToShow = '';
         this.createAndDispatchAcceptEvent(bodyJson);
       } else if (response.status === 403) {
         console.warn('Authentication failed (403).', this.attemptIndex);
         this.handleWrongPasswordEntered();
       } else {
-        console.error('Unexpected failure response received.');
-        this.handleUnexpectedFailureReponse(response);
+        console.error('Unexpected failure response received. ');
+        this.handleUnexpectedError();
       }
     } catch (error) {
       console.error('Error:', error);
-      this.handleErrorDuringRequest(error);
+      this.handleUnexpectedError();
     } finally {
       form.reset();
     }
   }
 
-  private handleResetButton() {
+  private makeSignRequest(password: FormDataEntryValue) {
+    const url = this.signEndpoint;
+    const data = {
+      payload: this.payload,
+      credentials: { password },
+    };
+
+    return fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+  }
+
+  private handleRejectButton() {
+    if (this.terminatingEventSent) {
+      return;
+    }
+    this.terminatingEventSent = true;
     this.dispatchEvent(new CustomEvent(SignatureEvents.rejected));
   }
 
   private noPasswordEntered(form: HTMLFormElement) {
     console.error('No password given');
-    this.messageToShow = 'Please enter a password';
+    this.createAndDispatchFailureEvent(FailureReasons.credentialsEmpty);
     form.reset();
     return;
   }
 
   private maxNrOfAuthAttemptsExceeded(form: HTMLFormElement) {
-    this.messageToShow = 'Number of authentication attempts exceeded';
-    if (this.lastSignCallResultedInAuthenticationFailed) {
-      this.createAndDispatchFailureEvent(
-        'Failure during Signing: Authentication did not work. '
-      );
-    }
+    this.terminatingEventSent = true;
+    this.createAndDispatchFailureEvent(
+      FailureReasons.maxNrOfAuthAttemptsExceeded
+    );
     form.reset();
     return;
   }
 
   private handleWrongPasswordEntered() {
-    this.messageToShow = 'Wrong password';
-    this.lastSignCallResultedInAuthenticationFailed = true;
     this.attemptIndex++;
+    this.createAndDispatchFailureEvent(FailureReasons.credentialsWrong);
   }
 
-  private handleUnexpectedFailureReponse(response: Response) {
-    this.messageToShow = 'Something unexpected happened';
-    this.lastSignCallResultedInAuthenticationFailed = false;
-    this.attemptIndex = this.maxNrOfAuthAttempts;
-    this.createAndDispatchFailureEvent(
-      'Failure during Signing: Unexpected failure happened. Status response of Keycloak is: ' +
-        response.statusText
-    );
-  }
-
-  private handleErrorDuringRequest(error: unknown) {
-    this.messageToShow = 'Something unexpected happened';
-    this.lastSignCallResultedInAuthenticationFailed = false;
-    this.attemptIndex = this.maxNrOfAuthAttempts;
-    this.createAndDispatchFailureEvent(
-      'Failure during Signing: Unexpected failure happened: : ' + error
-    );
+  private handleUnexpectedError() {
+    this.terminatingEventSent = true;
+    this.createAndDispatchFailureEvent(FailureReasons.unexpectedError);
   }
 
   private createAndDispatchAcceptEvent({
     signedPayload,
   }: Record<string, string>) {
+    this.terminatingEventSent = true;
     this.dispatchEvent(
       new CustomEvent(SignatureEvents.signed, {
         detail: {
@@ -204,7 +196,7 @@ export class KeycloakSignature extends LitElement {
 
   private createAndDispatchFailureEvent(reason: String) {
     this.dispatchEvent(
-      new CustomEvent(SignatureEvents.failure, {
+      new CustomEvent(SignatureEvents.failed, {
         detail: {
           reason: reason,
         },

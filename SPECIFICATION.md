@@ -12,8 +12,8 @@ Specification
 
 This extension can be used in 3 different ways:
 
-- **[Keycloak Sign Endpoint](#1-Keycloak-Sign-Endpoint)**: the minimal way is sending the necessary data to the sign endpoint.
-- **[Custom Element](#2-Custom-Element)**: Using `<keycloak-signature>` web components which calls the POST [Keycloak Sign Endpoint](#1-Keycloak-Sign-Endpoint).
+- **[Keycloak Sign Endpoint](#1-Keycloak-Sign-Endpoint)**: The minimal way is sending the necessary data to the sign endpoint.
+- **[Custom Element](#2-Custom-Element)**: Using `<keycloak-signature>` web component which accepts the credentials of the user and calls the POST [Keycloak Sign Endpoint](#1-Keycloak-Sign-Endpoint).
 - **[Keycloak Page](#3-Keycloak-Page)**: Integrates the `<keycloak-signature>` [custom element](#2-Custom-Element) to provide signing functionality.
 
 
@@ -85,7 +85,7 @@ components:
 
 This endpoint expects an Authorization header and a request body which contains payload and credentials as JSON.
 
-- `KEYCLOAK_IDENTITY`: Keycloak Identity Token of the user (against who the credentials are validated).
+- `KEYCLOAK_IDENTITY`: Keycloak Identity Token of the user (against who the credentials are validated). This token will also be used to validate the current session.
 - `payload`: String value which is going to be inserted into the JWT. We recommend you to encode your payload into  **Base64**.
 - `credentials`: Object containing authentication method (e.g. password) and its corresponding credential value in order to verify the user.
 
@@ -98,7 +98,7 @@ Keycloak will return a 403 if the credentials are not valid.
 
 ### Example
 
-Request:
+**Request**
 
 ```
 POST /realms/realm1/sign/ HTTP/1.1
@@ -114,7 +114,7 @@ Cookie: KEYCLOAK_IDENTITY=eyJhbGciOiJIUzI1NiIsInR5cCI6...
 }
 ```
 
-Response OK:
+**Response OK**
 ```
 HTTP/1.1 200 OK
 Content-Type: application/json
@@ -124,7 +124,7 @@ Content-Type: application/json
 }
   ``` 
 
-Response Unauthorized:
+**Response Unauthorized**
 
 ```
 HTTP/1.1 403 Forbidden  
@@ -201,11 +201,13 @@ The [web component](https://developer.mozilla.org/en-US/docs/Web/API/Web_compone
 
 #### Events
 
-| Event      | Type                                | Description                                                                                                                      |
-| ---------- | ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| `signed`   | `CustomEvent<{ signedPayload: string }>` | Dispatched when the given payload has successfully been signed. The event contains the value of signedPayload from the API response. |
-| `failure`  | `CustomEvent<{ reason: string }>`   | Dispatched when signing of the payload has failed. The event contains the reason (decription) of the failure.     |
-| `rejected` | `CustomEvent`                       | Dispatched when the reject button is pressed                                                                                     |
+| Event      | Type                                     | Description                                                                                                                                                                                                                                     |
+| ---------- | ---------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `signed`   | `CustomEvent<{ signedPayload: string }>` | Dispatched when the given payload has successfully been signed. The event contains the value of signedPayload from the API response.                                                                                                            |
+| `failed`   | `CustomEvent<{ reason: string }>`        | Dispatched when signing the payload has failed. The event contains the reason (decription) of the failure. Following reasons are available: `credentials-wrong`, `max-nr-of-auth-attempts-exceeded`, `credentials-empty` and `unexpected-error` |
+| `rejected` | `CustomEvent`                            | Dispatched when the reject button is pressed                                                                                                                                                                                                    |
+
+
 
 #### CSS Shadow Parts
 
@@ -232,12 +234,58 @@ The [web component](https://developer.mozilla.org/en-US/docs/Web/API/Web_compone
 
 #### CSS Custom Properties
 
-> [!NOTE]
-> **Not defined yet…**
+**Title**
 
-| Property              | Description                           |
-| --------------------- | ------------------------------------- |
-| `--placeholder-color` | Controls the color of the placeholder |
+| Property                                 | Description                           | Type        | Default |
+| ---------------------------------------- | ------------------------------------- | ----------- | ------- |
+| `--keycloak-signature-title-font-size`   | Controls the font size of the title   | font size   | `2rem`  |
+| `--keycloak-signature-title-font-weight` | Controls the font weight of the title | font weight | `bold`  |
+| `--keycloak-signature-title-color`       | Controls the color of the title       | color       | `black` |
+
+**Password**
+
+| Property                                    | Description                                 | Type        | Default  |
+| ------------------------------------------- | ------------------------------------------- | ----------- | -------- |
+| `--keycloak-signature-password-font-size`   | Controls the font size of the password size | font size   | `1rem`   |
+| `--keycloak-signature-password-font-weight` | Controls the font weight of the password    | font weight | `normal` |
+| `--keycloak-signature-password-color`       | Controls the color of the password          | color       | `black`  |
+
+**Accept Button**
+
+| Property                                              | Description                                        | Type        | Default               |
+| ----------------------------------------------------- | -------------------------------------------------- | ----------- | --------------------- |
+| `--keycloak-signature-accept-button-font-size`        | Controls the font size of the accept button        | font size   | `1rem`                |
+| `--keycloak-signature-accept-button-font-weight`      | Controls the font weight of the accept button      | font weight | `normal`              |
+| `--keycloak-signature-accept-button-color`            | Controls the color of the accept button            | color       | `black`               |
+| `--keycloak-signature-accept-button-background-color` | Controls the background color of the accept button | color       | `white`               |
+| `--keycloak-signature-accept-button-border`           | Controls the border of the accept button           | color       | `0.25rem solid green` |
+| `--keycloak-signature-accept-button-padding`          | Controls the padding of the accept button          | color       | `0.25rem 0.5rem`      |
+| `--keycloak-signature-accept-button-text-align`       | Controls the text alignment of the accept button   | color       | `center`              |
+| `--keycloak-signature-accept-button-text-decoration`  | Controls the decoration of the accept button       | color       | `none`                |
+| `--keycloak-signature-accept-button-display`          | Controls the display of the accept button          | color       | `inline-block`        |
+
+**Reject Button**
+
+| Property                                              | Description                                        | Type        | Default             |
+| ----------------------------------------------------- | -------------------------------------------------- | ----------- | ------------------- |
+| `--keycloak-signature-reject-button-font-size`        | Controls the font size of the reject button        | font size   | `1rem`              |
+| `--keycloak-signature-reject-button-font-weight`      | Controls the font weight of the reject button      | font weight | `normal`            |
+| `--keycloak-signature-reject-button-color`            | Controls the color of the reject button            | color       | `black`             |
+| `--keycloak-signature-reject-button-background-color` | Controls the background color of the reject button | color       | `white`             |
+| `--keycloak-signature-reject-button-border`           | Controls the border of the reject button           | color       | `0.25rem solid red` |
+| `--keycloak-signature-reject-button-padding`          | Controls the padding of the reject button          | color       | `0.25rem 0.5rem`    |
+| `--keycloak-signature-reject-button-text-align`       | Controls the text alignment of the reject button   | color       | `center`            |
+| `--keycloak-signature-reject-button-text-decoration`  | Controls the decoration of the reject button       | color       | `none`              |
+| `--keycloak-signature-reject-button-display`          | Controls the display of the reject button          | color       | `inline-block`      |
+
+
+**Message Text**
+
+| Property                                  | Description                                       | Type      | Default |
+| ----------------------------------------- | ------------------------------------------------- | --------- | ------- |
+| `--keycloak-signature-message-text-color` | Controls the color of the text of the message     | color     | `red`   |
+| `--keycloak-signature-message-font-size`  | Controls the font size of the text of the message | font size | `1rem`  |
+
 
 ### Accept
 
@@ -252,6 +300,7 @@ Clicking on the accept button will call the sign endpoint (see [1.](#1-Keycloak-
 ![](https://hedgedoc.inventage.com/uploads/3d34be0a-dd87-4430-a4d8-fe1bc55060be.png)
 
 TODO: describe query parameters, payload, slot, title, accept, reject, authorization
+TODO: KEYCLOAK_IDENTITY token needed in order to validate session
 
 `GET /realms/realm1/signature?payload=...`
 
