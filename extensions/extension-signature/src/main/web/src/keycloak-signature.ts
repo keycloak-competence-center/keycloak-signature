@@ -45,7 +45,7 @@ enum FailureReasons {
  *
  * @cssprop --keycloak-signature-title-font-size - Controls the font size of the title
  * @cssprop --keycloak-signature-title-font-weight - Controls the font weight of the title
- * @cssprop ----keycloak-signature-title-color - Controls the font weight of the title
+ * @cssprop --keycloak-signature-title-color - Controls the font weight of the title
  *
  * @cssprop --keycloak-signature-password-font-size - Controls the font size of the password size
  * @cssprop --keycloak-signature-password-font-weight - Controls the font weight of the password
