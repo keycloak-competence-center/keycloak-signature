@@ -1,14 +1,5 @@
-Keycloak Signature Extension
-===
-
-The Keycloak Signature Extension gives Keycloak the ability to sign any values, after the user has "re-authenticated" himself. If the credentials are valid, Keycloak will response with a signed JWT including the payload.
-
 Specification
 ===
-
-> [!NOTE]
-> **This document is a draft and is still being edited.**
-
 
 This extension can be used in 3 different ways:
 
@@ -33,7 +24,7 @@ info:
     Keycloak Signature Extension REST API's
   version: 1.0.0
 paths:
-  /realms/master/signature/sign:
+  /realms/realm1/signature/sign:
     post:
       tags:
         - signing
@@ -83,15 +74,15 @@ components:
 
 **Request:**
 
-This endpoint expects an Authorization header and a request body which contains payload and credentials as JSON.
+This endpoint expects an Keycloak Identity Cookie and a request body which contains the payload and credentials as JSON.
 
-- `KEYCLOAK_IDENTITY`: Keycloak Identity Token of the user (against who the credentials are validated). This token will also be used to validate the current session.
+- `KEYCLOAK_IDENTITY`: This Session Cookie will be used to identify the user and validate the current session.
 - `payload`: String value which is going to be inserted into the JWT. We recommend you to encode your payload into  **Base64**.
 - `credentials`: Object containing authentication method (e.g. password) and its corresponding credential value in order to verify the user.
 
 **Response:**
 
-In case of valid credentials, Keycloak will return a 200 response with the signature in the body (`signedPayload=JWT)`. You can find more information about the signature and its structure [here](#SignedPayload).
+In case of valid session and credentials, Keycloak will return a 200 response with the signature in the body (`signedPayload=JWT)`. You can find more information about the signature and its structure [here](#SignedPayload).
 
 Keycloak will return a 403 if the credentials are not valid.
 
@@ -101,7 +92,7 @@ Keycloak will return a 403 if the credentials are not valid.
 **Request**
 
 ```
-POST /realms/realm1/sign/ HTTP/1.1
+POST /realms/realm1/signature/sign/ HTTP/1.1
 Host: server.example.com
 Content-Type: application/json
 Cookie: KEYCLOAK_IDENTITY=eyJhbGciOiJIUzI1NiIsInR5cCI6...
@@ -132,7 +123,7 @@ HTTP/1.1 403 Forbidden
 
 ### SignedPayload
 
-When the received credentials are valid then Keycloak will create a [JSON Web Token](https://jwt.io/introduction) (JWT) which includes the following values:
+When the received credentials are valid then Keycloak will create a [JSON Web Token](https://jwt.io/introduction) (JWT) which includes the following key-value pairs (with example values):
 
 
 ```
@@ -183,14 +174,14 @@ The [web component](https://developer.mozilla.org/en-US/docs/Web/API/Web_compone
 
 #### Properties
 
-| Property              | Attribute                 | Type     | Default                                   | Description                                                                                                                                                                                                        |
-| --------------------- | ------------------------- | -------- | ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `payload`             | `payload`                 | `string` | ""                                        | The payload which is going to be signed by Keycloak. If an invalid payload is given (e.g. empty string, `undefined` value etc.), the component does not render anything and logs a warning to the browser console. |
+| Property              | Attribute                 | Type     | Default                         | Description                                                                                                                                                                                                        |
+| --------------------- | ------------------------- | -------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `payload`             | `payload`                 | `string` | ""                              | The payload which is going to be signed by Keycloak. If an invalid payload is given (e.g. empty string, `undefined` value etc.), the component does not render anything and logs a warning to the browser console. |
 | `signEndpoint`        | `sign-endpoint`           | `string` | "/realms/master/signature/sign" | The API endpoint used for signing                                                                                                                                                                                  |
-| `titleText`           | `title`                   | `string` | "Signature"                               | Text of the title displayed on the top of the component                                                                                                                                                            |
-| `acceptText`          | `accept`                  | `string` | "Accept"                                  | Text of the accept button                                                                                                                                                                                          |
-| `rejectText`          | `reject`                  | `string` | "Reject"                                  | Text of the reject button                                                                                                                                                                                          |
-| `maxNrOfAuthAttempts` | `max-nr-of-auth-attempts` | `number` | 3                                         | Maximal number of authentication attempts                                                                                                                                                                          |
+| `titleText`           | `title`                   | `string` | "Keycloak Signature Extension"  | Text of the title displayed on the top of the component                                                                                                                                                            |
+| `acceptText`          | `accept`                  | `string` | "Accept"                        | Text of the accept button                                                                                                                                                                                          |
+| `rejectText`          | `reject`                  | `string` | "Reject"                        | Text of the reject button                                                                                                                                                                                          |
+| `maxNrOfAuthAttempts` | `max-nr-of-auth-attempts` | `number` | 3                               | Maximal number of authentication attempts                                                                                                                                                                          |
 
 
 #### Slots
@@ -286,10 +277,20 @@ The [web component](https://developer.mozilla.org/en-US/docs/Web/API/Web_compone
 | `--keycloak-signature-message-text-color` | Controls the color of the text of the message     | color     | `red`   |
 | `--keycloak-signature-message-font-size`  | Controls the font size of the text of the message | font size | `1rem`  |
 
+**Example**
+
+```htmlbars=
+<style>
+      :root {
+        --keycloak-signature-title-font-size: 2.25rem;
+        --keycloak-signature-title-font-weight: bold;
+      }
+</style>
+```
 
 ### Accept
 
-Clicking on the accept button will call the sign endpoint (see [1.](#1-Keycloak-Sign-Endpoint)) with the given payload and password. On receiving the response, the event handler will dispatch a `CustomEvent` depending on the received HTTP status code (either `signed` when successful or `failed` when there was a failure).
+Clicking on the accept button will call the sign endpoint (see [1.](#1-Keycloak-Sign-Endpoint)) with the given payload and credentials. On receiving the response, the event handler will dispatch a `CustomEvent` depending on the received HTTP status code (either `signed` when successful or `failed` when there was a failure).
 
 
 ## 3. Keycloak Page
@@ -304,25 +305,14 @@ TODO: KEYCLOAK_IDENTITY token needed in order to validate session
 
 `GET /realms/realm1/signature?payload=...`
 
-This call fetches a page in which the custom element`<keycloak-signature></keycloak-signature>` is embedded. An arbitrary number of query parameters might be added to this call which will be handed over to the custom element. The [attributes section](#attributes) describes which attributes in the custom element are predefined and how they are interpreted.
-The response status code is 200.
-
-
-## Extension Configuration
-
-- Valid domains (for CORS)
-
+This call fetches a page in which the custom element`<keycloak-signature>` is embedded.
 
 ## Out of Scope
 
-- `additonal-properties` --> zusätzlicher JSON Parameter der Webkomponente
 - Keycloak Page
+- Valid domains (for CORS)
+- `additonal-properties` --> zusätzlicher JSON Parameter der Webkomponente
 - Configure Authentication Method
-- CORS: client configuration or set response header (Access-Control-Allow-Origin)
-
-## Archive
-
-![Architecture](https://dl.peschee.me/Untitled-2023-09-04-1428-EHqUXP.png)
 
 ## Integration Diagrams
 
@@ -384,3 +374,7 @@ The response status code is 200.
     SPA->>API: /enterOrder with signature
     
 ```
+
+## Archive
+
+![Architecture](https://dl.peschee.me/Untitled-2023-09-04-1428-EHqUXP.png)

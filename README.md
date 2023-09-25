@@ -11,7 +11,7 @@ Keycloak Signature Extension
 
 ## What is it good for?
 
-The Keycloak Signature Extension gives Keycloak the ability to sign any values, after the user has "re-authenticated" himself. If the credentials are valid, Keycloak will return a signed JWT including the payload.
+The Keycloak Signature Extension gives Keycloak the ability to sign any values, after the user has "re-authenticated" himself. If the credentials are valid, Keycloak will response with a signed JWT including the payload.
 
 ## Implementation Variants
 
