@@ -24,8 +24,56 @@ enum FailureReasons {
  * 4. Provides an accept button
  * 5. Provides a reject button
  *
- * @slot - This element has a slot
- * @csspart button - The button
+ * @attr payload - The payload which is going to be signed by Keycloak
+ * @attr sign-endpoint - The API endpoint used for signing
+ * @attr title - Text of the title displayed on the top of the component
+ * @attr accept - Text of the accept button
+ * @attr reject - Text of the reject button
+ * @attr max-nr-of-auth-attempts - Maximal number of authentication attempts
+ *
+ * @fires signed - Dispatched when the given payload has successfully been signed.
+ * @fires failed - Dispatched when signing the payload has failed.
+ * @fires rejected - Dispatched when the reject button is pressed.
+ *
+ * @slot - Default content placed inside the main body of the component
+ *
+ * @csspart title - Representing the title
+ * @csspart password - Representing the password
+ * @csspart message-text - Representing the text of the message
+ * @csspart accept-button - Representing the accept button
+ * @csspart reject-button - Representing the reject button
+ *
+ * @cssprop --keycloak-signature-title-font-size - Controls the font size of the title
+ * @cssprop --keycloak-signature-title-font-weight - Controls the font weight of the title
+ * @cssprop ----keycloak-signature-title-color - Controls the font weight of the title
+ *
+ * @cssprop --keycloak-signature-password-font-size - Controls the font size of the password size
+ * @cssprop --keycloak-signature-password-font-weight - Controls the font weight of the password
+ * @cssprop --keycloak-signature-password-color - Controls the color of the password
+ *
+ * @cssprop --keycloak-signature-accept-button-font-size - Controls the font size of the accept button
+ * @cssprop --keycloak-signature-accept-button-font-weight - Controls the font weight of the accept button
+ * @cssprop --keycloak-signature-accept-button-color - Controls the color of the accept button
+ * @cssprop --keycloak-signature-accept-button-background-color - Controls the background color of the accept button
+ * @cssprop --keycloak-signature-accept-button-border - Controls the border of the accept button
+ * @cssprop --keycloak-signature-accept-button-padding - Controls the padding of the accept button
+ * @cssprop --keycloak-signature-accept-button-text-align - Controls the text alignment of the accept button
+ * @cssprop --keycloak-signature-accept-button-text-decoration - Controls the decoration of the accept button
+ * @cssprop --keycloak-signature-accept-button-display - Controls the display of the accept button
+ *
+ * @cssprop --keycloak-signature-reject-button-font-size - Controls the font size of the reject button
+ * @cssprop --keycloak-signature-reject-button-font-weight - Controls the font weight of the reject button
+ * @cssprop --keycloak-signature-reject-button-color - Controls the color of the reject button
+ * @cssprop --keycloak-signature-reject-button-background-color - Controls the background color of the reject button
+ * @cssprop --keycloak-signature-reject-button-border - Controls the border of the reject button
+ * @cssprop --keycloak-signature-reject-button-padding - Controls the padding of the reject button
+ * @cssprop --keycloak-signature-reject-button-text-align - Controls the text alignment of the reject button
+ * @cssprop --keycloak-signature-reject-button-text-decoration - Controls the decoration of the reject button
+ * @cssprop --keycloak-signature-reject-button-display - Controls the display of the reject button
+ *
+ * @cssprop --keycloak-signature-message-text-color - Controls the color of the text of the message
+ * @cssprop --keycloak-signature-message-font-size - Controls the font size of the text of the message
+ *
  * @customElement keycloak-signature
  */
 @customElement('keycloak-signature')
@@ -33,7 +81,7 @@ export class KeycloakSignature extends LitElement {
   /** @private */
   static override styles: CSSResultGroup = styles;
 
-  @property()
+  @property({ attribute: 'sign-endpoint', type: String })
   signEndpoint = '/realms/master/signature/sign';
 
   @property({ attribute: 'payload', type: String })

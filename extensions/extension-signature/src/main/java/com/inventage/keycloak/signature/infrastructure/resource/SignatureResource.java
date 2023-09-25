@@ -37,7 +37,6 @@ public class SignatureResource {
 
     /**
      * Not implemented yet
-     *
      */
     @GET
     @Path("")
@@ -63,9 +62,9 @@ public class SignatureResource {
      * Endpoint in order to create a JWT which includes an arbitrary payload.
      * The user calling this endpoint has to be in a session.
      *
-     * @param signRequest: Record of type {@code SignRequest }
+     * @param signRequest Record of type {@code SignRequest}
      * @return In case of correct credentials and valid session it will return an OK (200) response with the signed JWT ({@code PayloadToken})
-     * else it returns a Forbidden (403) response.
+     * else it returns a Forbidden (403) response
      */
     @POST
     @Path("/sign")
@@ -113,7 +112,6 @@ public class SignatureResource {
     private boolean isPasswordValid(SignRequest signRequest, UserModel userModel) {
         //TODO: add support for other authentication methods
         String password = signRequest.credentials().get("password");
-        session.getContext().
         return password != null && userModel.credentialManager().isValid(UserCredentialModel.password(password));
     }
 }

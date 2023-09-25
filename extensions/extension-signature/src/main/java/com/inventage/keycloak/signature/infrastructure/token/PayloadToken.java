@@ -10,7 +10,7 @@ import org.keycloak.models.RealmModel;
 import org.keycloak.services.Urls;
 
 /**
- * Custom Token
+ * Token containing custom fields such as "payload".
  */
 public class PayloadToken extends DefaultActionToken {
 
