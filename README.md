@@ -17,8 +17,8 @@ The Keycloak Signature Extension gives Keycloak the ability to sign any values, 
 
 This extension can be used in 3 different ways:
 
-- **[Keycloak Sign Endpoint](./SPECIFICATION.md#1-Keycloak-Sign-Endpoint)**: the minimal way is sending the necessary data to the sign endpoint.
-- **[Custom Element](./SPECIFICATION.md#2-Custom-Element)**: Using `<keycloak-signature>` web components which calls the POST [Keycloak Sign Endpoint](./SPECIFICATION.md#1-Keycloak-Sign-Endpoint).
+- **[Keycloak Sign Endpoint](./SPECIFICATION.md#1-Keycloak-Sign-Endpoint)**: The minimal way is sending the necessary data to the sign endpoint.
+- **[Custom Element](./SPECIFICATION.md#2-Custom-Element)**: Using the `<keycloak-signature>` web component which calls the POST [Keycloak Sign Endpoint](./SPECIFICATION.md#1-Keycloak-Sign-Endpoint).
 - **[Keycloak Page](./SPECIFICATION.md#3-Keycloak-Page)**: Integrates the `<keycloak-signature>` [custom element](./SPECIFICATION.md#2-Custom-Element) to provide signing functionality.
 
 Have a look at the [specification](./SPECIFICATION.md) for more detailed information about composition and configuration.
@@ -35,7 +35,7 @@ This project creates a custom [Keycloak] server based on [Keycloak.X]. It is str
 - `config`: provides the build stage configuration and the setup of Keycloak
 - `container`: creates the custom docker image
 - `docker-compose`: provides a sample for launching the custom docker image
-- `extensions`: provides samples for Keycloak SPI implementations
+- `extensions`: provides the implementation of the signature extension
 - `server`: provides a Keycloak installation for local development & testing
 
 Please refer to the [tutorial of custom Keycloak](https://keycloak.ch/keycloak-tutorials/tutorial-custom-keycloak/) for more details of this project.
@@ -63,8 +63,7 @@ Development of the initial version was sponsored by [Körber Pharma](https://www
 
 ## Support
 
-For more support for this extension or your Keycloak project in general, visit [Keycloak Competence Center Switzerland]
-(https://keycloak.ch)
+For more support for this extension or your Keycloak project in general, visit [Keycloak Competence Center Switzerland](https://keycloak.ch)
 
 [Keycloak]: https://keycloak.org
 [Keycloak.X]: https://www.keycloak.org/migration/migrating-to-quarkus

@@ -4,7 +4,7 @@ Specification
 This extension can be used in 3 different ways:
 
 - **[Keycloak Sign Endpoint](#1-Keycloak-Sign-Endpoint)**: The minimal way is sending the necessary data to the sign endpoint.
-- **[Custom Element](#2-Custom-Element)**: Using `<keycloak-signature>` web component which accepts the credentials of the user and calls the POST [Keycloak Sign Endpoint](#1-Keycloak-Sign-Endpoint).
+- **[Custom Element](#2-Custom-Element)**: Using the `<keycloak-signature>` web component which accepts the credentials of the user and calls the POST [Keycloak Sign Endpoint](#1-Keycloak-Sign-Endpoint).
 - **[Keycloak Page](#3-Keycloak-Page)**: Integrates the `<keycloak-signature>` [custom element](#2-Custom-Element) to provide signing functionality.
 
 
