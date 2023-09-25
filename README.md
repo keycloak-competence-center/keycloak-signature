@@ -37,7 +37,6 @@ This project creates a custom [Keycloak] server based on [Keycloak.X]. It is str
 - `docker-compose`: provides a sample for launching the custom docker image
 - `extensions`: provides samples for Keycloak SPI implementations
 - `server`: provides a Keycloak installation for local development & testing
-- `themes`: provides samples for custom themes
 
 Please refer to the [tutorial of custom Keycloak](https://keycloak.ch/keycloak-tutorials/tutorial-custom-keycloak/) for more details of this project.
 

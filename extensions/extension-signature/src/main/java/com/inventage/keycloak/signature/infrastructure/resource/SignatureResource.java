@@ -22,6 +22,9 @@ import org.keycloak.services.util.CacheControlUtil;
 import java.io.InputStream;
 import java.util.Base64;
 
+/**
+ * Resource class providing endpoints for fetching the page and calling the signing procedure
+ */
 public class SignatureResource {
 
     private static final Logger LOGGER = Logger.getLogger(SignatureResource.class);
@@ -32,12 +35,14 @@ public class SignatureResource {
         this.session = session;
     }
 
+    /**
+     * Not implemented yet
+     */
     @GET
     @Path("")
     @NoCache
     @Produces(MediaType.TEXT_HTML)
-    public Response getPage(@QueryParam("payload") String description) {
-        // TODO: check if correct realm
+    public Response getPage() {
         LOGGER.debugf("getPage: / endpoint called");
 
         AuthenticationManager.AuthResult authResult = AuthenticationManager.authenticateIdentityCookie(session,
@@ -53,6 +58,14 @@ public class SignatureResource {
         return responseBuilder.build();
     }
 
+    /**
+     * Endpoint in order to create a JWT which includes an arbitrary payload.
+     * The user calling this endpoint has to be in a session.
+     *
+     * @param signRequest Record of type {@code SignRequest}
+     * @return In case of correct credentials and valid session it will return an OK (200) response with the signed JWT ({@code PayloadToken})
+     * else it returns a Forbidden (403) response
+     */
     @POST
     @Path("/sign")
     @NoCache

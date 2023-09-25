@@ -13,7 +13,6 @@
         <module>server</module>
         <module>config</module>
         <module>extensions</module>
-        <module>themes</module>
         <module>container</module>
         <module>docker-compose</module>
     </modules>
