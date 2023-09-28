@@ -47,6 +47,7 @@
       accept="Custom Accept"
       reject="Custom Reject"
       max-nr-of-auth-attempts="5"
+      message-text="message-text"
     >
       <p>Custom Body</p>
     </keycloak-signature>
@@ -54,15 +55,21 @@
     <script>
       const component = document.querySelector('keycloak-signature');
       component.addEventListener('signed', (e) => {
+        const keycloakSignatureElement = e.target;
+        keycloakSignatureElement.messageText = '';
         console.log('signed', e);
       });
 
       component.addEventListener('rejected', (e) => {
+        const keycloakSignatureElement = e.target;
+        keycloakSignatureElement.messageText = '';
         console.log('rejected', e);
       });
 
       component.addEventListener('failed', (e) => {
         console.log('failed', e);
+        const keycloakSignatureElement = e.target;
+        keycloakSignatureElement.messageText = e.detail.reason;
       });
     </script>
   </body>

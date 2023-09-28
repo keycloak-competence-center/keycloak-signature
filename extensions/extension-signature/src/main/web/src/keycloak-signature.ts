@@ -1,5 +1,5 @@
 import { CSSResultGroup, html, LitElement, nothing } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement, property, query } from 'lit/decorators.js';
 
 import styles from './keycloak-signature.scss.js';
 
@@ -99,9 +99,13 @@ export class KeycloakSignature extends LitElement {
   @property({ attribute: 'max-nr-of-auth-attempts', type: Number })
   maxNrOfAuthAttempts = 3;
 
-  private attemptIndex = 0;
+  @property({ attribute: 'message-text', type: String })
+  messageText = '';
 
-  private terminatingEventSent: boolean = false;
+  @query('.accept-button')
+  private acceptButton?: HTMLButtonElement;
+
+  private attemptIndex = 0;
 
   override render() {
     if (!this.payload) {
@@ -112,26 +116,40 @@ export class KeycloakSignature extends LitElement {
     return html`
       <div class="wrapper">
         ${this.titleText
-          ? html`<h1 class="title" part="title">${this.titleText}</h1>`
+          ? html`<h4 class="title" part="title">${this.titleText}</h4>`
           : nothing}
         <slot><p>Please provide your credentials below</p></slot>
         <form @submit="${this.handleFormSubmit}">
-          <label class="password" part="password"
-            >Password <br />
-            <br />
-            <input type="password" id="password" name="password" /><br /><br />
-          </label>
-          <button class="accept-button" part="accept-button" type="submit">
-            ${this.acceptText}
-          </button>
-          <button
-            class="reject-button"
-            part="reject-button"
-            @click="${this.handleRejectButton}"
-            type="reset"
-          >
-            ${this.rejectText}
-          </button>
+          <label part="label" for="password">Password</label>
+          <div class="input-with-icon" part="input-with-icon">
+            <input id="password" part="input" type="password" name="password" />
+            <svg
+              class="input-icon"
+              part="input-icon"
+              xmlns="http://www.w3.org/2000/svg"
+              height="24"
+              width="24"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
+              />
+            </svg>
+          </div>
+          <p class="message-text" part="message-text">${this.messageText}</p>
+          <div part="action-bar">
+            <button class="accept-button" part="accept-button" type="submit">
+              ${this.acceptText}
+            </button>
+            <button
+              class="reject-button"
+              part="reject-button"
+              @click="${this.handleRejectButton}"
+              type="reset"
+            >
+              ${this.rejectText}
+            </button>
+          </div>
         </form>
       </div>
     `;
@@ -143,14 +161,13 @@ export class KeycloakSignature extends LitElement {
     const data = new FormData(form);
     const password = data.get('password');
 
-    if (this.terminatingEventSent) {
+    if (this.attemptIndex >= this.maxNrOfAuthAttempts) {
+      this.maxNrOfAuthAttemptsExceeded(form);
+      this.disableAcceptButton();
+
       return;
     }
 
-    if (this.attemptIndex >= this.maxNrOfAuthAttempts) {
-      this.maxNrOfAuthAttemptsExceeded(form);
-      return;
-    }
     if (!password) {
       this.noPasswordEntered(form);
       return;
@@ -196,10 +213,7 @@ export class KeycloakSignature extends LitElement {
   }
 
   private handleRejectButton() {
-    if (this.terminatingEventSent) {
-      return;
-    }
-    this.terminatingEventSent = true;
+    this.disableAcceptButton();
     this.dispatchEvent(new CustomEvent(SignatureEvents.rejected));
   }
 
@@ -211,7 +225,7 @@ export class KeycloakSignature extends LitElement {
   }
 
   private maxNrOfAuthAttemptsExceeded(form: HTMLFormElement) {
-    this.terminatingEventSent = true;
+    this.disableAcceptButton();
     this.createAndDispatchFailureEvent(
       FailureReasons.maxNrOfAuthAttemptsExceeded
     );
@@ -225,14 +239,14 @@ export class KeycloakSignature extends LitElement {
   }
 
   private handleUnexpectedError() {
-    this.terminatingEventSent = true;
+    this.disableAcceptButton();
     this.createAndDispatchFailureEvent(FailureReasons.unexpectedError);
   }
 
   private createAndDispatchAcceptEvent({
     signedPayload,
   }: Record<string, string>) {
-    this.terminatingEventSent = true;
+    this.disableAcceptButton();
     this.dispatchEvent(
       new CustomEvent(SignatureEvents.signed, {
         detail: {
@@ -250,6 +264,12 @@ export class KeycloakSignature extends LitElement {
         },
       })
     );
+  }
+
+  private disableAcceptButton() {
+    if (this.acceptButton) {
+      this.acceptButton.disabled = true;
+    }
   }
 }
 
