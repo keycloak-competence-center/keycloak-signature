@@ -157,15 +157,15 @@
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
-            <dependencies>
-                <!-- the server module must be built for copying the jars into -->
-                <dependency>
-                    <groupId>com.inventage.keycloak.custom</groupId>
-                    <artifactId>server</artifactId>
-                    <version>${project.version}</version>
-                    <type>pom</type>
-                </dependency>
-            </dependencies>
+<!--            <dependencies>-->
+<!--                &lt;!&ndash; the server module must be built for copying the jars into &ndash;&gt;-->
+<!--                <dependency>-->
+<!--                    <groupId>com.inventage.keycloak.custom</groupId>-->
+<!--                    <artifactId>server</artifactId>-->
+<!--                    <version>${project.version}</version>-->
+<!--                    <type>pom</type>-->
+<!--                </dependency>-->
+<!--            </dependencies>-->
             <build>
                 <plugins>
                     <!-- deployment configuration for all extension modules -->
@@ -187,7 +187,6 @@
                             </execution>
                         </executions>
                     </plugin>
-
                 </plugins>
             </build>
         </profile>
