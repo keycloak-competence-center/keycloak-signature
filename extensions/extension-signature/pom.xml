@@ -6,11 +6,11 @@
 
     <parent>
         <artifactId>extensions</artifactId>
-        <groupId>com.inventage.keycloak.custom</groupId>
+        <groupId>com.inventage.keycloak.extensions</groupId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>extension-signature</artifactId>
+    <artifactId>signature</artifactId>
 
     <properties>
         <node.version>18.15.0</node.version>
@@ -157,15 +157,15 @@
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
-<!--            <dependencies>-->
-<!--                &lt;!&ndash; the server module must be built for copying the jars into &ndash;&gt;-->
-<!--                <dependency>-->
-<!--                    <groupId>com.inventage.keycloak.custom</groupId>-->
-<!--                    <artifactId>server</artifactId>-->
-<!--                    <version>${project.version}</version>-->
-<!--                    <type>pom</type>-->
-<!--                </dependency>-->
-<!--            </dependencies>-->
+            <dependencies>
+                <!-- the server module must be built before copying the jars into it -->
+                <dependency>
+                    <groupId>com.inventage.keycloak.custom</groupId>
+                    <artifactId>server</artifactId>
+                    <version>${project.version}</version>
+                    <type>pom</type>
+                </dependency>
+            </dependencies>
             <build>
                 <plugins>
                     <!-- deployment configuration for all extension modules -->
