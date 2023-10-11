@@ -33,7 +33,7 @@ jobs:
         release_candidate_version=${major_minor_patch}${date}-${{github.run_number}}-${GITHUB_SHA::8}
         mvn versions:set -DnewVersion=${release_candidate_version}
     - name: Build with Maven
-      run: mvn -B package -P !local,github deploy --file extensions/extension-signature/pom.xml
+      run: mvn -B package -P \!local,github deploy --file extensions/extension-signature/pom.xml
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       # https://github.com/actions/delete-package-versions
