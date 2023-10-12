@@ -54,7 +54,7 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.inventage.keycloak.custom</groupId>
+            <groupId>com.inventage.keycloak.signature</groupId>
             <artifactId>server</artifactId>
             <version>${project.version}</version>
             <type>pom</type>
