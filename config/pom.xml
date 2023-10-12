@@ -6,7 +6,7 @@
 
     <parent>
         <artifactId>parent</artifactId>
-        <groupId>com.inventage.keycloak.custom</groupId>
+        <groupId>com.inventage.keycloak.signature</groupId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
