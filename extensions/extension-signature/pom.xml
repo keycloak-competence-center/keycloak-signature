@@ -49,6 +49,13 @@
         <dependency>
             <groupId>io.vertx</groupId>
             <artifactId>vertx-core</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.inventage.keycloak.custom</groupId>
+            <artifactId>server</artifactId>
+            <version>${project.version}</version>
+            <type>pom</type>
         </dependency>
     </dependencies>
 
@@ -148,60 +155,75 @@
                     </execution>
                 </executions>
             </plugin>
+            <!-- deployment configuration for all extension modules -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>deploy-${project.artifactId}</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <copy file="${file.to.deploy}" todir="${keycloak.providers.dir}"/>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
+
+
     </build>
 
-    <profiles>
-        <profile>
-            <id>local</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <dependencies>
-                <!-- the server module must be built before copying the jars into it -->
-                <dependency>
-                    <groupId>com.inventage.keycloak.custom</groupId>
-                    <artifactId>server</artifactId>
-                    <version>${project.version}</version>
-                    <type>pom</type>
-                </dependency>
-            </dependencies>
-            <build>
-                <plugins>
-                    <!-- deployment configuration for all extension modules -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-antrun-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>deploy-${project.artifactId}</id>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                                <configuration>
-                                    <target>
-                                        <copy file="${file.to.deploy}" todir="${keycloak.providers.dir}"/>
-                                    </target>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
+<!--    <profiles>-->
+<!--        <profile>-->
+<!--            <id>local</id>-->
+<!--            <activation>-->
+<!--                <activeByDefault>true</activeByDefault>-->
+<!--            </activation>-->
+<!--            <dependencies>-->
+<!--                &lt;!&ndash; the server module must be built before copying the jars into it &ndash;&gt;-->
+<!--                <dependency>-->
+<!--                    <groupId>com.inventage.keycloak.custom</groupId>-->
+<!--                    <artifactId>server</artifactId>-->
+<!--                    <version>${project.version}</version>-->
+<!--                    <type>pom</type>-->
+<!--                </dependency>-->
+<!--            </dependencies>-->
+<!--            <build>-->
+<!--                <plugins>-->
+<!--                    &lt;!&ndash; deployment configuration for all extension modules &ndash;&gt;-->
+<!--                    <plugin>-->
+<!--                        <groupId>org.apache.maven.plugins</groupId>-->
+<!--                        <artifactId>maven-antrun-plugin</artifactId>-->
+<!--                        <executions>-->
+<!--                            <execution>-->
+<!--                                <id>deploy-${project.artifactId}</id>-->
+<!--                                <phase>package</phase>-->
+<!--                                <goals>-->
+<!--                                    <goal>run</goal>-->
+<!--                                </goals>-->
+<!--                                <configuration>-->
+<!--                                    <target>-->
+<!--                                        <copy file="${file.to.deploy}" todir="${keycloak.providers.dir}"/>-->
+<!--                                    </target>-->
+<!--                                </configuration>-->
+<!--                            </execution>-->
+<!--                        </executions>-->
+<!--                    </plugin>-->
+<!--                </plugins>-->
+<!--            </build>-->
+<!--        </profile>-->
 
-        <profile>
-            <id>github</id>
-        </profile>
-    </profiles>
+<!--        <profile>-->
+<!--            <id>github</id>-->
+<!--        </profile>-->
+<!--    </profiles>-->
 
-    <distributionManagement>
-        <repository>
-            <id>github</id>
-            <name>GitHub Packages</name>
-            <url>https://maven.pkg.github.com/inventage/keycloak-signature-extension</url>
-        </repository>
-    </distributionManagement>
+<!--   -->
 
 </project>
