@@ -35,6 +35,12 @@
         <keycloak-config-cli.version>22.0.0</keycloak-config-cli.version> <!-- from https://github.com/adorsys/keycloak-config-cli/releases -->
         <node.version>18.15.0</node.version>
         <npm.version>9.5.0</npm.version>
+
+        <!--  properties for manifest file -->
+        <build.manifest.section>Build Details</build.manifest.section>
+        <build.unknown>UNKNOWN</build.unknown>
+        <build.number>${build.unknown}</build.number>
+        <build.revision>${build.unknown}</build.revision>
     </properties>
 
     <dependencyManagement>
@@ -113,35 +119,30 @@
                     <artifactId>maven-clean-plugin</artifactId>
                     <version>3.1.0</version>
                 </plugin>
-                <!-- Plugin to retrieve Git information -->
                 <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>buildnumber-maven-plugin</artifactId>
-                    <version>1.4</version>
-                    <executions>
-                        <execution>
-                            <phase>validate</phase>
-                            <goals>
-                                <goal>create</goal>
-                            </goals>
-                            <configuration>
-                                <doCheck>true</doCheck>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
+                    <!-- http://akeffalas.github.io/blog/2014/04/jenkins-build-info-maven-artifacts.html  -->
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
                     <version>3.3.0</version>
                     <configuration>
                         <archive>
                             <manifest>
-                                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                                <addClasspath>true</addClasspath>
                             </manifest>
                             <manifestEntries>
-                                <Implementation-Build>${buildNumber}</Implementation-Build>
+                                <Build-Time>${maven.build.timestamp}</Build-Time>
                             </manifestEntries>
+                            <manifestSections>
+                                <manifestSection>
+                                    <name>${build.manifest.section}</name>
+                                    <manifestEntries>
+                                        <Implementation-Title>${project.name}</Implementation-Title>
+                                        <Implementation-Version>${project.version}</Implementation-Version>
+                                        <Implementation-Build-Number>${build.number}</Implementation-Build-Number>
+                                        <Implementation-SCM-Revision>${build.revision}</Implementation-SCM-Revision>
+                                    </manifestEntries>
+                                </manifestSection>
+                            </manifestSections>
                         </archive>
                     </configuration>
                 </plugin>
