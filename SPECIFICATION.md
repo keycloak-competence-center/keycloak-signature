@@ -203,13 +203,17 @@ The [web component](https://developer.mozilla.org/en-US/docs/Web/API/Web_compone
 #### CSS Shadow Parts
 
 
-| Part            | Description                          |
-| --------------- | ------------------------------------ |
-| `title`         | Representing the title               |
-| `password`      | Representing the password            |
-| `message-text`  | Representing the text of the message |
-| `accept-button` | Representing the accept button       |
-| `reject-button` | Representing the reject button       |
+| Part              | Description                          |
+| ----------------- | ------------------------------------ |
+| `title`           | Representing the title               |
+| `label`           | Representing the label               |
+| `input-with-icon` | Representing the input with the icon |
+| `input`           | Representing the input               |
+| `input-icon`      | Representing the input icon          |
+| `message-text`    | Representing the text of the message |
+| `action-bar`      | Representing the action bar          |
+| `accept-button`   | Representing the accept button       |
+| `reject-button`   | Representing the reject button       |
 
 **Example**
 
@@ -374,7 +378,3 @@ This call fetches a page in which the custom element`<keycloak-signature>` is em
     SPA->>API: /enterOrder with signature
     
 ```
-
-## Archive
-
-![Architecture](https://dl.peschee.me/Untitled-2023-09-04-1428-EHqUXP.png)
