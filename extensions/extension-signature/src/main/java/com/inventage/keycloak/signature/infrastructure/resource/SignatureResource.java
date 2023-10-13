@@ -2,25 +2,20 @@ package com.inventage.keycloak.signature.infrastructure.resource;
 
 import com.inventage.keycloak.signature.infrastructure.record.SignRequest;
 import com.inventage.keycloak.signature.infrastructure.token.PayloadToken;
-import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
-import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.Cookie;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.jboss.logging.Logger;
 import org.jboss.resteasy.annotations.cache.NoCache;
 import org.keycloak.common.util.Time;
-import org.keycloak.http.HttpRequest;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.UserCredentialModel;
 import org.keycloak.models.UserModel;
-import org.keycloak.models.UserSessionModel;
 import org.keycloak.services.managers.AuthenticationManager;
-import org.keycloak.services.util.CacheControlUtil;
-
-import java.io.InputStream;
-import java.util.Base64;
 
 /**
  * Resource class providing endpoints for fetching the page and calling the signing procedure
