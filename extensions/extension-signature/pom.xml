@@ -156,7 +156,7 @@
             <dependencies>
                 <!-- the server module must be built for copying the jars into -->
                 <dependency>
-                    <groupId>com.inventage.keycloak.custom</groupId>
+                    <groupId>com.inventage.keycloak.signature</groupId>
                     <artifactId>server</artifactId>
                     <version>${project.version}</version>
                     <type>pom</type>
