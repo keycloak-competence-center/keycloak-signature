@@ -9,11 +9,11 @@ services:
       - PGDATA=/var/lib/postgresql/data/pgdata
       - POSTGRES_PASSWORD=postgres
     volumes:
-      - kc-order-activation-data:/var/lib/postgresql/data/pgdata
+      - kc-signature-data:/var/lib/postgresql/data/pgdata
     networks:
       - postgres
 
 networks:
   postgres:
 volumes:
-  kc-order-activation-data:
+  kc-signature-data:

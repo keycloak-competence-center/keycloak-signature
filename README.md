@@ -46,7 +46,7 @@ Please have a look at the [requirements of custom Keycloak](https://keycloak.ch/
 
 For this project, you also need:
 
-- [Node.js]
+- [Node.js] (18.15.0)
 
 ### Getting Started
 
