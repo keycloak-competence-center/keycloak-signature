@@ -127,8 +127,10 @@
                         </execution>
                     </executions>
                     <configuration>
-                        <doCheck>true</doCheck>
-                        <doUpdate>true</doUpdate>
+                        <getRevisionOnlyOnce>true</getRevisionOnlyOnce>
+                        <shortRevisionLength>8</shortRevisionLength>
+                        <attach>true</attach>
+                        <addOutputDirectoryToResources>true</addOutputDirectoryToResources>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -138,10 +140,18 @@
                     <configuration>
                         <archive>
                             <manifestEntries>
-                                <!-- Add project version and the Git commit hash to the manifest -->
-                                <Implementation-Version>${project.version}</Implementation-Version>
-                                <Implementation-Build-Number>${buildNumber}</Implementation-Build-Number>
+                                <Build-Time>${maven.build.timestamp}</Build-Time>
                             </manifestEntries>
+                            <manifestSections>
+                                <manifestSection>
+                                    <name>Versions</name>
+                                    <manifestEntries>
+                                        <Implementation-Version>${project.version}</Implementation-Version>
+                                        <Implementation-Build-Number>${buildNumber}</Implementation-Build-Number>
+                                        <Implementation-SCM-Revision>${scmBranch}</Implementation-SCM-Revision>
+                                    </manifestEntries>
+                                </manifestSection>
+                            </manifestSections>
                         </archive>
                     </configuration>
                 </plugin>
