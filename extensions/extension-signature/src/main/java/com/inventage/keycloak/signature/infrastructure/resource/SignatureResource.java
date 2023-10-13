@@ -36,29 +36,6 @@ public class SignatureResource {
     }
 
     /**
-     * Not implemented yet
-     */
-    @GET
-    @Path("")
-    @NoCache
-    @Produces(MediaType.TEXT_HTML)
-    public Response getPage() {
-        LOGGER.debugf("getPage: / endpoint called");
-
-        AuthenticationManager.AuthResult authResult = AuthenticationManager.authenticateIdentityCookie(session,
-                session.getContext().getRealm(), true);
-
-        if (authResult == null) {
-            LOGGER.debugf("getPage: No active session present");
-            return Response.status(403).build();
-        }
-
-        final InputStream indexHtml = this.getClass().getClassLoader().getResourceAsStream("theme/signature/templates/index.html");
-        final Response.ResponseBuilder responseBuilder = Response.ok(indexHtml).cacheControl(CacheControlUtil.getDefaultCacheControl());
-        return responseBuilder.build();
-    }
-
-    /**
      * Endpoint in order to create a JWT which includes an arbitrary payload.
      * The user calling this endpoint has to be in a session.
      *
@@ -72,7 +49,6 @@ public class SignatureResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response sign(SignRequest signRequest) {
-        // TODO: CORS
         LOGGER.debugf("sign: /sign (POST) endpoint called");
 
         AuthenticationManager.AuthResult authResult = AuthenticationManager.authenticateIdentityCookie(session,
@@ -110,7 +86,6 @@ public class SignatureResource {
     }
 
     private boolean isPasswordValid(SignRequest signRequest, UserModel userModel) {
-        //TODO: add support for other authentication methods
         String password = signRequest.credentials().get("password");
         return password != null && userModel.credentialManager().isValid(UserCredentialModel.password(password));
     }
