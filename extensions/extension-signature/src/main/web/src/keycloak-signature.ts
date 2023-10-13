@@ -38,8 +38,12 @@ enum FailureReasons {
  * @slot - Default content placed inside the main body of the component
  *
  * @csspart title - Representing the title
- * @csspart password - Representing the password
+ * @csspart label - Representing the label
+ * @csspart input-with-icon - Representing the input with the icon
+ * @csspart input - Representing the input
+ * @csspart input-icon - Representing the input icon
  * @csspart message-text - Representing the text of the message
+ * @csspart action-bar - Representing the action  bar
  * @csspart accept-button - Representing the accept button
  * @csspart reject-button - Representing the reject button
  *

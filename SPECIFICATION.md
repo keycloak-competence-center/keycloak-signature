@@ -215,6 +215,11 @@ The [web component](https://developer.mozilla.org/en-US/docs/Web/API/Web_compone
 | `accept-button`   | Representing the accept button       |
 | `reject-button`   | Representing the reject button       |
 
+The picture below shows which elements of the web component the css parts (in blue color font) are affecting.
+
+![](https://hedgedoc.inventage.com/uploads/d6917b4f-ae9e-4472-ba49-2496fdc1c499.png)
+
+
 **Example**
 
 ```htmlbars=
