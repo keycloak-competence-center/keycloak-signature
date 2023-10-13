@@ -124,14 +124,11 @@
                             <goals>
                                 <goal>create</goal>
                             </goals>
+                            <configuration>
+                                <doCheck>true</doCheck>
+                            </configuration>
                         </execution>
                     </executions>
-                    <configuration>
-                        <getRevisionOnlyOnce>true</getRevisionOnlyOnce>
-                        <shortRevisionLength>8</shortRevisionLength>
-                        <attach>true</attach>
-                        <addOutputDirectoryToResources>true</addOutputDirectoryToResources>
-                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -139,19 +136,12 @@
                     <version>3.3.0</version>
                     <configuration>
                         <archive>
+                            <manifest>
+                                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            </manifest>
                             <manifestEntries>
-                                <Build-Time>${maven.build.timestamp}</Build-Time>
+                                <Implementation-Build>${buildNumber}</Implementation-Build>
                             </manifestEntries>
-                            <manifestSections>
-                                <manifestSection>
-                                    <name>Versions</name>
-                                    <manifestEntries>
-                                        <Implementation-Version>${project.version}</Implementation-Version>
-                                        <Implementation-Build-Number>${buildNumber}</Implementation-Build-Number>
-                                        <Implementation-SCM-Revision>${scmBranch}</Implementation-SCM-Revision>
-                                    </manifestEntries>
-                                </manifestSection>
-                            </manifestSections>
                         </archive>
                     </configuration>
                 </plugin>
