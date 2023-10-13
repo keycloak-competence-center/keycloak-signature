@@ -26,6 +26,11 @@
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-bootstrap-runner</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.inventage.keycloak.extensions</groupId>
+            <artifactId>signature</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -46,6 +51,19 @@
                             <includeGroupIds>org.keycloak</includeGroupIds>
                             <includeArtifactIds>keycloak-quarkus-dist</includeArtifactIds>
                             <outputDirectory>${project.build.directory}</outputDirectory>
+                        </configuration>
+                    </execution>
+                    <!-- extract jar of signature extension -->
+                    <execution>
+                        <id>unpack-signature-extension</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <includeGroupIds>com.inventage.keycloak.extensions</includeGroupIds>
+                            <includeArtifactIds>signature</includeArtifactIds>
+                            <outputDirectory>${project.build.directory}/keycloak/providers</outputDirectory>
                         </configuration>
                     </execution>
                 </executions>
