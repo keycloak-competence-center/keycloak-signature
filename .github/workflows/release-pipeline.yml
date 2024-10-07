@@ -33,7 +33,7 @@ jobs:
       - name: Release to GitHub releases
         uses: softprops/action-gh-release@v1
         with:
-          files: "extensions/extension-signature/target/signature-*.jar"
+          files: "extensions/extension-signature/target/keycloak-signature-*.jar"
           body_path: "CHANGELOG.md"
           fail_on_unmatched_files: true
           tag_name: ${{ github.event.inputs.releaseVersion }}
