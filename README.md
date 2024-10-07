@@ -1,13 +1,13 @@
 Keycloak Signature Extension
 ===============
 
-![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/inventage/keycloak-signature-extension?sort=semver)
+![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/keycloak-competence-center/keycloak-signature?sort=semver)
 ![Keycloak Dependency Version](https://img.shields.io/badge/Keycloak-22.0.1-blue)
-![GitHub Release Date](https://img.shields.io/github/release-date-pre/inventage/keycloak-signature-extension)
-![Github Last Commit](https://img.shields.io/github/last-commit/inventage/keycloak-signature-extension)
+![GitHub Release Date](https://img.shields.io/github/release-date-pre/keycloak-competence-center/keycloak-signature)
+![Github Last Commit](https://img.shields.io/github/last-commit/keycloak-competence-center/keycloak-signature)
 
-![CI build](https://github.com/inventage/keycloak-signature-extension/actions/workflows/build-pipeline.yml/badge.svg)
-![open issues](https://img.shields.io/github/issues/inventage/keycloak-signature-extension)
+![CI build](https://github.com/keycloak-competence-center/keycloak-signature/actions/workflows/build-pipeline.yml/badge.svg)
+![open issues](https://img.shields.io/github/issues/keycloak-competence-center/keycloak-signature)
 
 ## What is it good for?
 

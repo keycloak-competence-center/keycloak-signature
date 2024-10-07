@@ -1,7 +1,7 @@
 {
   "private": true,
-  "name": "@inventage/keycloak-signature-extension",
-  "version": "1.0.0",
+  "name": "@keycloak-competence-center/keycloak-signature",
+  "version": "2.0.0",
   "description": "A companion webcomponent for the keycloak signature extension",
   "license": "MIT",
   "author": "Inventage AG <info@inventage.com>",

@@ -18,4 +18,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.0]-202310160608-2-fa9fd502
 
 
-[Unreleased]: https://github.com/keycloak-competence-center/keycloak-signature-extension/commits/main
+[Unreleased]: https://github.com/keycloak-competence-center/keycloak-signature/commits/main
