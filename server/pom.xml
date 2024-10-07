@@ -27,8 +27,8 @@
             <artifactId>quarkus-bootstrap-runner</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.inventage.keycloak.extensions</groupId>
-            <artifactId>signature</artifactId>
+            <groupId>com.inventage.keycloak.signature</groupId>
+            <artifactId>keycloak-signature</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
