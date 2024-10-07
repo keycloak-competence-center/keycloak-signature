@@ -19,5 +19,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 [Unreleased]: https://github.com/keycloak-competence-center/keycloak-signature-extension/commits/main
-
-
