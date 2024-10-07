@@ -21,9 +21,9 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.inventage.keycloak.extensions</groupId>
-            <artifactId>signature</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <groupId>com.inventage.keycloak.signature</groupId>
+            <artifactId>keycloak-signature</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 
