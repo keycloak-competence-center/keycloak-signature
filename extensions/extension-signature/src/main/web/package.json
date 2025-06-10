@@ -39,7 +39,7 @@
   },
   "types": "dist/keycloak-signature.d.ts",
   "dependencies": {
-    "lit": "^2.8.0"
+    "lit": "^3.3.0"
   },
   "devDependencies": {
     "@custom-elements-manifest/analyzer": "^0.8.4",
