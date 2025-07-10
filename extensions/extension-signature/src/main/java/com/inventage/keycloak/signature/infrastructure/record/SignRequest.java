@@ -8,5 +8,5 @@ import java.util.Map;
  * @param payload String value which should later be added to the JWT
  * @param credentials Map of authentication method to its dedicated (login) value
  */
-public record SignRequest(String payload, Map<String, String> credentials) {
+public record SignRequest(String payload, Map<String, String> credentials, String clientId) {
 }

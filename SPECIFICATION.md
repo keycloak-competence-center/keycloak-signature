@@ -48,7 +48,8 @@ paths:
                   type: object
                   additionalProperties: 
                     type: string
-
+                clientId:
+                  type: string
       security:
         - keycloakIdentity: []
       responses:
@@ -79,6 +80,7 @@ This endpoint expects an Keycloak Identity Cookie (which means the user has to b
 - `KEYCLOAK_IDENTITY`: This Session Cookie will be used to identify the user and validate the current session.
 - `payload`: String value which is going to be inserted into the JWT. We recommend you to encode your payload into  **Base64**.
 - `credentials`: Object containing authentication method (e.g. password) and its corresponding credential value in order to verify the user.
+- `cliendId`: Client ID to set in the session context in order to generate the JWT. This argument is optional and has higher priority than the configured [SIGNATURE_CLIENT_ID](#environment-variables) environment variable.
 
 **Response:**
 
@@ -131,6 +133,7 @@ When the received credentials are valid then Keycloak will create a [JSON Web To
   "payload": "xyz",
   "username": "user@inventage.com",
   "credential": "password",
+  "clientId": "account-console",
   "iat": 18977474,
   "iss": "http://localhost:8080/realms/master" ,
   "jti": "ca6b138c-60e9-4ce7-b06f-d2a21afdb9d1",
@@ -143,6 +146,7 @@ When the received credentials are valid then Keycloak will create a [JSON Web To
 - `payload`: String parameter received during calling the `/sign` endpoint.
 - `username`: Username of the user who issued the signing process
 - `credential`: Used authentication method for validating the user
+- `clientId`: Client ID in which the JWT has been issued
 - `iat`: (issued at) Unix timestamp of JWT creation
 - `iss`: (Issuer) Creater and Signer of this JWT
 - `jti`: (JWT ID) Unique identifier of this JWT
@@ -153,6 +157,14 @@ When the received credentials are valid then Keycloak will create a [JSON Web To
 The JWT will be singed with the private key of Keycloak (asymmertic signing).
 The default signing algorithm is **RS256**, however it can be configured with `defaultSignatureAlgorithm` property in the realm JSON configuration file.
 
+### Environment Variables
+
+The signature extension consists of following configuration:
+
+
+| Name      | Default Value     | Description                                                                                                                                            | 
+|-----------|-------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `SIGNATURE_CLIENT_ID` | `account-console` | Client ID set in the session context in order to generate the JWT. This configuration has lower priority than the Client ID received via the sign API. |
 
 ## 2. Custom Element
 
@@ -175,9 +187,10 @@ The [web component](https://developer.mozilla.org/en-US/docs/Web/API/Web_compone
 #### Properties
 
 | Property              | Attribute                 | Type     | Default                         | Description                                                                                                                                                                                                        |
-| --------------------- | ------------------------- | -------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+|-----------------------|---------------------------| -------- | ------------------------------- |--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `payload`             | `payload`                 | `string` | ""                              | The payload which is going to be signed by Keycloak. If an invalid payload is given (e.g. empty string, `undefined` value etc.), the component does not render anything and logs a warning to the browser console. |
 | `signEndpoint`        | `sign-endpoint`           | `string` | "/realms/master/signature/sign" | The API endpoint used for signing                                                                                                                                                                                  |
+| `clientId`            | `client-id`               | `string` | "" | Client ID set to session context                                                                                                                                                                                   |
 | `titleText`           | `title`                   | `string` | "Keycloak Signature Extension"  | Text of the title displayed on the top of the component                                                                                                                                                            |
 | `acceptText`          | `accept`                  | `string` | "Accept"                        | Text of the accept button                                                                                                                                                                                          |
 | `rejectText`          | `reject`                  | `string` | "Reject"                        | Text of the reject button                                                                                                                                                                                          |

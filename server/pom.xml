@@ -65,8 +65,8 @@
                             <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
-                            <includeGroupIds>com.inventage.keycloak.extensions</includeGroupIds>
-                            <includeArtifactIds>signature</includeArtifactIds>
+                            <includeGroupIds>com.inventage.keycloak.signature</includeGroupIds>
+                            <includeArtifactIds>keycloak-signature</includeArtifactIds>
                             <outputDirectory>${project.build.directory}/keycloak/providers</outputDirectory>
                         </configuration>
                     </execution>

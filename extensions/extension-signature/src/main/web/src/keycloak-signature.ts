@@ -1,4 +1,4 @@
-import { CSSResultGroup, html, LitElement, nothing } from 'lit';
+import { type CSSResultGroup, html, LitElement, nothing } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
 
 import styles from './keycloak-signature.scss.js';
@@ -90,6 +90,9 @@ export class KeycloakSignature extends LitElement {
 
   @property({ attribute: 'payload', type: String })
   payload: string | undefined;
+
+  @property({ attribute: 'client-id', type: String })
+  clientId: string | undefined;
 
   @property({ attribute: 'title', type: String })
   titleText = 'Keycloak Signature Extension';
@@ -205,6 +208,7 @@ export class KeycloakSignature extends LitElement {
     const data = {
       payload: this.payload,
       credentials: { password },
+      clientId: this.clientId,
     };
 
     return fetch(url, {
@@ -260,7 +264,7 @@ export class KeycloakSignature extends LitElement {
     );
   }
 
-  private createAndDispatchFailureEvent(reason: String) {
+  private createAndDispatchFailureEvent(reason: string) {
     this.dispatchEvent(
       new CustomEvent(SignatureEvents.failed, {
         detail: {

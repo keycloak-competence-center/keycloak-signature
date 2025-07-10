@@ -1,5 +1,6 @@
 import proxy from 'koa-proxies';
-import {esbuildPlugin} from '@web/dev-server-esbuild';
+import { esbuildPlugin } from '@web/dev-server-esbuild';
+import { fileURLToPath } from 'node:url';
 
 const mode = process.env.MODE || 'dev';
 if (!['dev', 'prod'].includes(mode)) {
@@ -7,11 +8,17 @@ if (!['dev', 'prod'].includes(mode)) {
 }
 
 export default {
-  nodeResolve: {exportConditions: mode === 'dev' ? ['development'] : []},
+  nodeResolve: { exportConditions: mode === 'dev' ? ['development'] : [] },
   preserveSymlinks: true,
-  plugins: [esbuildPlugin({ts: true, target: 'ES2020'})],
+  plugins: [
+    esbuildPlugin({
+      ts: true,
+      target: 'ES2022',
+      tsconfig: fileURLToPath(new URL('./tsconfig.json', import.meta.url)),
+    }),
+  ],
   middleware: [
-    proxy('/realms/master/signature', {
+    proxy('/realms/koerber/signature', {
       target: 'http://localhost:8080',
       changeOrigin: true,
       logs: true,

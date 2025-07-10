@@ -3,6 +3,8 @@ import './keycloak-signature';
 
 import { fixture, assert } from '@open-wc/testing';
 import { html } from 'lit/static-html.js';
+import * as test from 'node:test';
+import * as suite from 'node:test';
 
 suite('keycloak-signature', () => {
   test('is defined', () => {
