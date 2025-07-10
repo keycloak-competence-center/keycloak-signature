@@ -34,10 +34,10 @@
   <body>
     <h1><code>&lt;keycloak-signature></code> Demo</h1>
 
-    <h2>Default</h2>
-    <keycloak-signature
-      payload="F42AE53B-E124-4B6A-9B1A-1A8D518A5D83"
-    ></keycloak-signature>
+    <!--    <h2>Default</h2>-->
+    <!--    <keycloak-signature-->
+    <!--      payload="F42AE53B-E124-4B6A-9B1A-1A8D518A5D83"-->
+    <!--    ></keycloak-signature>-->
 
     <h2>Custom</h2>
     <keycloak-signature
@@ -48,6 +48,8 @@
       reject="Custom Reject"
       max-nr-of-auth-attempts="5"
       message-text="message-text"
+      sign-endpoint="/realms/koerber/signature/sign"
+      client-id="account-console"
     >
       <p>Custom Body</p>
     </keycloak-signature>

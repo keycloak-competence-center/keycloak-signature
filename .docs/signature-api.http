@@ -1,0 +1,12 @@
+### Test Signature API
+POST localhost:8080/realms/koerber/signature/sign
+Content-Type: application/json
+Cookie: KEYCLOAK_IDENTITY=token
+
+{
+  "payload": "xyz",
+  "credentials": {
+    "password": "password"
+  },
+  "clientId": "koerber"
+}

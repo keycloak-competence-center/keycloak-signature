@@ -7,11 +7,12 @@ import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.CacheControl;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.jboss.logging.Logger;
-import org.jboss.resteasy.annotations.cache.NoCache;
 import org.keycloak.common.util.Time;
+import org.keycloak.models.ClientModel;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.UserCredentialModel;
 import org.keycloak.models.UserModel;
@@ -23,8 +24,10 @@ import org.keycloak.services.managers.AuthenticationManager;
 public class SignatureResource {
 
     private static final Logger LOGGER = Logger.getLogger(SignatureResource.class);
+    private static final String DEFAULT_CLIENT_ID = "account-console";
+    private static final String SIGNATURE_CLIENT_ID = "SIGNATURE_CLIENT_ID";
 
-    final KeycloakSession session;
+    private final KeycloakSession session;
 
     public SignatureResource(KeycloakSession session) {
         this.session = session;
@@ -40,7 +43,6 @@ public class SignatureResource {
      */
     @POST
     @Path("/sign")
-    @NoCache
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response sign(SignRequest signRequest) {
@@ -60,20 +62,50 @@ public class SignatureResource {
             return Response.status(403).build();
         }
 
-        final JsonObject signedPayloadJson = createAndSerializeToken(signRequest, userModel);
+        final CacheControl cacheControl = new CacheControl();
+        cacheControl.setNoCache(true);
+
+        final String clientId = extractClientId(signRequest);
+        LOGGER.debugf("sign: using Client ID: '%s'", clientId);
+        final ClientModel clientModel = session.clients().getClientByClientId(session.getContext().getRealm(), clientId);
+        if (clientModel == null) {
+            final String errorMessage = String.format("Client ID '%s' not found", clientId);
+            LOGGER.warnf("sign: " + errorMessage);
+            return Response.status(400).entity(errorMessage).build();
+        }
+        session.getContext().setClient(clientModel);
+
+        final JsonObject signedPayloadJson = createAndSerializeToken(signRequest, userModel, session.getContext().getClient());
         final Response.ResponseBuilder responseBuilder = Response
                 .ok()
-                .entity(signedPayloadJson);
+                .entity(signedPayloadJson)
+                .cacheControl(cacheControl);
         return responseBuilder.build();
     }
 
-    private JsonObject createAndSerializeToken(SignRequest signRequest, UserModel userModel) {
+    private String extractClientId(SignRequest signRequest) {
+        String clientId = DEFAULT_CLIENT_ID;
+
+        final String clientEnvVal = System.getenv(SIGNATURE_CLIENT_ID);
+
+        if (clientEnvVal != null && !clientEnvVal.isBlank()) {
+            clientId = clientEnvVal;
+        }
+
+        if (signRequest.clientId() != null && !signRequest.clientId().isBlank()) {
+            clientId = signRequest.clientId();
+        }
+        return clientId;
+    }
+
+    private JsonObject createAndSerializeToken(SignRequest signRequest, UserModel userModel, ClientModel client) {
         final PayloadToken payloadToken = new PayloadToken(
                 userModel.getId(),
                 Time.currentTime() + 3600,
                 signRequest.payload(),
                 signRequest.credentials().keySet().stream().toList().get(0),
-                userModel.getUsername()
+                userModel.getUsername(),
+                client.getClientId()
         );
 
         final String signedPayloadToken = payloadToken.serialize(session, session.getContext().getRealm(), session.getContext().getUri());
