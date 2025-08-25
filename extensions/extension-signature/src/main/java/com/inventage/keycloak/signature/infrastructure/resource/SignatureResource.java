@@ -62,9 +62,6 @@ public class SignatureResource {
             return Response.status(403).build();
         }
 
-        final CacheControl cacheControl = new CacheControl();
-        cacheControl.setNoCache(true);
-
         final String clientId = extractClientId(signRequest);
         LOGGER.debugf("sign: using Client ID: '%s'", clientId);
         final ClientModel clientModel = session.clients().getClientByClientId(session.getContext().getRealm(), clientId);
@@ -78,8 +75,7 @@ public class SignatureResource {
         final JsonObject signedPayloadJson = createAndSerializeToken(signRequest, userModel, session.getContext().getClient());
         final Response.ResponseBuilder responseBuilder = Response
                 .ok()
-                .entity(signedPayloadJson)
-                .cacheControl(cacheControl);
+                .entity(signedPayloadJson);
         return responseBuilder.build();
     }
 
