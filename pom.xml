@@ -323,9 +323,9 @@
 
     <distributionManagement>
         <repository>
-            <id>github</id>
-            <name>GitHub Packages</name>
-            <url>https://maven.pkg.github.com/keycloak-competence-center/keycloak-signature</url>
+            <id>kcc-maven-staging</id>
+            <name>Nexus 3 kcc-maven-staging</name>
+            <url>https://nexus3.inventage.com/repository/kcc-maven-staging/</url>
         </repository>
     </distributionManagement>
 </project>
