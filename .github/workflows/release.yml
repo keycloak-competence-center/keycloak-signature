@@ -183,7 +183,7 @@ jobs:
         run: |
           export ARTIFACT_NAME=${{ env.MAVEN_ARTIFACT_ID }}-${{ inputs.version }}.jar
           ART_URL="${{ env.NEXUS_BASE_URL }}/repository/${{ env.NEXUS_RELEASE_REPO }}/\
-          com/inventage/keycloak/configurable-themes/${{ env.MAVEN_ARTIFACT_ID }}/${{ inputs.version }}/$ARTIFACT_NAME"
+          com/inventage/keycloak/signature/${{ env.MAVEN_ARTIFACT_ID }}/${{ inputs.version }}/$ARTIFACT_NAME"
           
           echo "Downloading $ART_URL"
           curl --fail -L \
