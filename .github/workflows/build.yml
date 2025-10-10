@@ -52,8 +52,23 @@ jobs:
           release_candidate_version=${major_minor_patch}${date}-${{github.run_number}}-${GITHUB_SHA::8}
           mvn versions:set -DnewVersion=${release_candidate_version}
 
-      - name: Build with Maven and deploy to Nexus3
-        run: mvn -B deploy -Dbuild.number=${{github.run_number}} -Dbuild.revision=${GITHUB_SHA} --file extensions/keycloak-configurable-themes/.flattened-pom.xml
+      - name: Build
+        run: mvn -B install -Dbuild.number=${{github.run_number}} -Dbuild.revision=${GITHUB_SHA} --file pom.xml
+
+      - name: Flatten pom.xml
+        run: | 
+          mvn process-resources org.codehaus.mojo:flatten-maven-plugin:1.7.0:flatten \
+           -Dflatten.dependency.mode=all \
+           -Dflatten.mode=bom \
+           -Dee.maven.groupId=org.wildfly \
+           --file extensions/extension-signature/pom.xml
+
+      - name: Build and deploy
+        run: | 
+          mvn -B deploy \
+           -Dbuild.number=${{github.run_number}} \
+           -Dbuild.revision=${GITHUB_SHA} \
+           --file extensions/extension-signature/.flattened-pom.xml
         env:
           KCC_CI_USERNAME: ${{secrets.KCC_CI_USERNAME}}
           KCC_CI_PASSWORD: ${{secrets.KCC_CI_PASSWORD}}
