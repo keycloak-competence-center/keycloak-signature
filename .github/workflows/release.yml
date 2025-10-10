@@ -1,0 +1,206 @@
+name: Release Pipeline
+run-name: 'Release of version ${{ inputs.version }} triggered by ${{ github.actor }} on ${{ github.ref }}'
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'The version to release'
+        type: string
+        required: true
+
+# Prevent running checks for the same branch in parallel
+# New workflows will cancel existing workflows…
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NEXUS_STAGING_REPO_ID: kcc-maven-staging
+  NEXUS_RELEASE_REPO: kcc-maven
+  NEXUS_BASE_URL: https://nexus3.inventage.com
+  MAVEN_GROUP_ID: com.inventage.keycloak.signature
+  MAVEN_ARTIFACT_ID: keycloak-signature
+
+jobs:
+  download:
+    name: Download
+    runs-on: ubuntu-latest
+    outputs:
+      ARTIFACT_FILENAME: ${{ steps.artifact.outputs.ARTIFACT_FILENAME }}
+    steps:
+      - name: Setup settings.xml
+        uses: s4u/maven-settings-action@v3.1.0
+        with:
+          servers: |
+            [{
+              "id": "${{ env.NEXUS_STAGING_REPO_ID }}",
+              "username": "${{ secrets.KCC_CI_USERNAME }}",
+              "password": "${{ secrets.KCC_CI_PASSWORD }}"
+            }]
+
+      - name: Get artifact from Nexus
+        id: artifact
+        run: |
+          mvn org.apache.maven.plugins:maven-dependency-plugin:3.8.1:get \
+          -DgroupId=${{ env.MAVEN_GROUP_ID }}  \
+          -DartifactId=${{ env.MAVEN_ARTIFACT_ID }} \
+          -Dversion=${{ inputs.version }} \
+          -DremoteRepositories=${{ env.NEXUS_STAGING_REPO_ID }}::::https://nexus3.inventage.com/repository/${{ env.NEXUS_STAGING_REPO_ID }}/ \
+          -Dpackaging=jar
+
+          # Check that the file exists
+          export GROUP_ID_PATH=$(echo "${{ env.MAVEN_GROUP_ID }}" | tr '.' '/')
+          export ARTIFACT_FILENAME=${{ env.MAVEN_ARTIFACT_ID }}-${{ inputs.version }}.zip
+          export ARTIFACT_PATH="$HOME/.m2/repository/$GROUP_ID_PATH/${{ env.MAVEN_ARTIFACT_ID }}/${{ inputs.version }}/$ARTIFACT_FILENAME"
+          file $ARTIFACT_PATH
+          echo "ARTIFACT_PATH=$ARTIFACT_PATH" >> $GITHUB_OUTPUT
+          echo "ARTIFACT_FILENAME=$ARTIFACT_FILENAME" >> $GITHUB_OUTPUT
+
+      - name: Summary
+        run: |
+          echo "## Download info" >> $GITHUB_STEP_SUMMARY
+          echo "- **group id**: \`${{ env.MAVEN_GROUP_ID }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **artifact id**: \`${{ env.MAVEN_ARTIFACT_ID }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **artifact filename**: \`${{ steps.artifact.outputs.ARTIFACT_FILENAME }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **artifact path**: \`${{ steps.artifact.outputs.ARTIFACT_PATH }}\`" >> $GITHUB_STEP_SUMMARY
+
+  parse:
+    name: Version info
+    runs-on: ubuntu-latest
+    outputs:
+      SEMVER: ${{ steps.parse.outputs.SEMVER }}
+      GIT_SHA: ${{ steps.parse.outputs.GIT_SHA }}
+      FULL_SHA: ${{ steps.parse.outputs.FULL_SHA }}
+      PRE_RELEASE: ${{ steps.parse.outputs.PRE_RELEASE }}
+    steps:
+      - name: Parse version
+        id: parse
+        run: |
+          # Extract semver
+          export SEMVER=$(echo "${{ inputs.version }}" | cut -d'-' -f1-2 | sed 's/-[0-9]\{12\}.*//')
+          echo "SEMVER=$SEMVER"
+          echo "SEMVER=$SEMVER" >> $GITHUB_OUTPUT
+
+          # Extract git sha
+          GIT_SHA=$(echo "${{ inputs.version }}" | rev | cut -d'-' -f1 | rev)
+          echo "GIT_SHA=$GIT_SHA">> $GITHUB_OUTPUT
+
+          # Resolve short SHA to full SHA using GitHub API
+          # Fail if gh command fails (e.g., no token, network error)
+          FULL_SHA=$(gh api /repos/"$GITHUB_REPOSITORY"/commits/"$GIT_SHA" --jq '.sha') || {
+            echo "Error: gh api command failed to resolve $GIT_SHA" >&2
+            exit 1
+          }
+
+          # Check if FULL_SHA is empty
+          if [ -z "$FULL_SHA" ]; then
+            echo "Error: Failed to resolve ref $GIT_SHA (possibly invalid SHA or missing GH_TOKEN)" >&2
+            exit 1
+          fi
+
+          echo "Expanded ref $GIT_SHA to SHA $FULL_SHA"
+          echo "FULL_SHA=$FULL_SHA" >> $GITHUB_OUTPUT
+
+          # Check whether this version is a pre-release
+          if [[ "$SEMVER" =~ ^[0-9]+\.[0-9]+\.[0-9]+- ]]; then
+            echo "PRE_RELEASE=true" >> $GITHUB_OUTPUT
+          else
+            echo "PRE_RELEASE=false" >> $GITHUB_OUTPUT
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Summary
+        run: |
+          echo "## Version info" >> $GITHUB_STEP_SUMMARY
+          echo "- **semver**: \`${{ steps.parse.outputs.SEMVER }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **sha** (short): \`${{ steps.parse.outputs.GIT_SHA }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **sha** (full): \`${{ steps.parse.outputs.FULL_SHA }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **pre release?**: \`${{ steps.parse.outputs.PRE_RELEASE }}\`" >> $GITHUB_STEP_SUMMARY
+
+  tag:
+    name: Create Tag
+    runs-on: ubuntu-latest
+    needs: [download, parse]
+    permissions:
+      contents: write
+      actions: write
+    outputs:
+      TAG_NAME: ${{ steps.tag.outputs.TAG_NAME }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ssh-key: ${{ secrets.ACCEPTANCE_TESTS_DEPLOY_KEY }}
+          ref: ${{ needs.parse.outputs.FULL_SHA }}
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Configure Git user
+        run: |
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
+
+      - name: Create a tag
+        id: tag
+        run: |
+          git tag -a -m "${{ needs.parse.outputs.FULL_SHA }}" ${{ needs.parse.outputs.SEMVER }}
+          git tag -l
+          echo "TAG_NAME=${{ needs.parse.outputs.SEMVER }}" >> $GITHUB_OUTPUT
+
+      # There's an issue in GitHub where changes cannot be pushed from an action if the tag points to a commit where
+      # the contents of .github/workflows/ are not identical to the contents of .github/workflows/ on the latest commit of any branch!
+      # @see https://github.com/orgs/community/discussions/151442
+      - name: Push tag
+        run: |
+          git push origin ${{ steps.tag.outputs.TAG_NAME }}
+
+      - name: Summary
+        run: |
+          echo "## Tag Details" >> $GITHUB_STEP_SUMMARY
+          echo "- **tag**: \`${{ steps.tag.outputs.TAG_NAME }}\`" >> $GITHUB_STEP_SUMMARY
+
+  promote:
+    name: Promote Nexus Artefact
+    runs-on: ubuntu-latest
+    needs: [tag]
+    steps:
+      - name: Promote
+        run: |
+          curl -fSs -X POST \
+            -u ${{ secrets.KCC_CI_USERNAME }}:${{ secrets.KCC_CI_PASSWORD }} \
+            '${{ env.NEXUS_BASE_URL }}/service/rest/v1/staging/move/${{ env.NEXUS_RELEASE_REPO }}?group=${{ env.MAVEN_GROUP_ID }}&name=${{ env.MAVEN_ARTIFACT_ID }}&version=${{ inputs.version }}'
+
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    needs: [tag, parse, download, promote]
+    steps:
+      - name: Download Maven artifact via curl
+        run: |
+          export ARTIFACT_NAME=${{ env.MAVEN_ARTIFACT_ID }}-${{ inputs.version }}.jar
+          ART_URL="${{ env.NEXUS_BASE_URL }}/repository/${{ env.NEXUS_RELEASE_REPO }}/\
+          com/inventage/keycloak/configurable-themes/${{ env.MAVEN_ARTIFACT_ID }}/${{ inputs.version }}/$ARTIFACT_NAME"
+          
+          echo "Downloading $ART_URL"
+          curl --fail -L \
+          -u "${{ secrets.KCC_CI_USERNAME }}:${{ secrets.KCC_CI_PASSWORD }}" \
+          -o "$ARTIFACT_NAME" \
+          "$ART_URL"
+          
+          echo "Downloaded file details:"
+          ls -lh "$ARTIFACT_NAME"
+
+      - name: Display downloaded files
+        run: ls -R
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: ${{ inputs.version }}
+          tag_name: ${{ needs.tag.outputs.TAG_NAME }}
+          generate_release_notes: true
+          prerelease: ${{ needs.parse.outputs.PRE_RELEASE }}
