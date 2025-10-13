@@ -130,7 +130,7 @@ jobs:
       TAG_NAME: ${{ steps.tag.outputs.TAG_NAME }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           ssh-key: ${{ secrets.ACCEPTANCE_TESTS_DEPLOY_KEY }}
           ref: ${{ needs.parse.outputs.FULL_SHA }}
