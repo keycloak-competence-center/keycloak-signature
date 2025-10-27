@@ -2,7 +2,7 @@ Keycloak Signature Extension
 ===============
 
 ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/keycloak-competence-center/keycloak-signature?sort=semver)
-![Keycloak Dependency Version](https://img.shields.io/badge/Keycloak-22.0.1-blue)
+![Keycloak Dependency Version](https://img.shields.io/badge/Keycloak-26.3.1-blue)
 ![GitHub Release Date](https://img.shields.io/github/release-date-pre/keycloak-competence-center/keycloak-signature)
 ![Github Last Commit](https://img.shields.io/github/last-commit/keycloak-competence-center/keycloak-signature)
 

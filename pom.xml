@@ -33,7 +33,7 @@
         <!-- versions -->
         <keycloak.version>26.3.1</keycloak.version> <!-- update also keycloak-config-cli.version -->
         <keycloak-config-cli.version>26.1.0</keycloak-config-cli.version> <!-- from https://github.com/adorsys/keycloak-config-cli/releases -->
-        <node.version>18.15.0</node.version>
+        <node.version>22.21.0</node.version>
         <npm.version>9.5.0</npm.version>
 
         <!--  properties for manifest file -->
