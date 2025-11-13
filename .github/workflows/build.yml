@@ -50,6 +50,7 @@ jobs:
           major_minor_patch=$(echo "${snapshot_version}" | sed 's/SNAPSHOT//g')
           date=$(date -u +%Y%m%d%H%M)
           release_candidate_version=${major_minor_patch}${date}-${{github.run_number}}-${GITHUB_SHA::8}
+          echo "RELEASE_CANDIDATE_VERSION=$release_candidate_version" >> $GITHUB_ENV
           mvn versions:set -DnewVersion=${release_candidate_version}
 
       - name: Build
@@ -63,12 +64,14 @@ jobs:
            -Dee.maven.groupId=org.wildfly \
            --file extensions/extension-signature/pom.xml
 
-      - name: Build and deploy
-        run: | 
-          mvn -B deploy \
-           -Dbuild.number=${{github.run_number}} \
-           -Dbuild.revision=${GITHUB_SHA} \
-           --file extensions/extension-signature/.flattened-pom.xml
+      - name: Deploy
+        working-directory: extensions/extension-signature
+        run: |
+          mvn -B org.apache.maven.plugins:maven-deploy-plugin:3.1.4:deploy-file \
+            -Durl=https://nexus3.inventage.com/repository/kcc-maven-staging/ \
+            -DrepositoryId=kcc-maven-staging \
+            -Dfile=./target/keycloak-signature-${RELEASE_CANDIDATE_VERSION}.jar \
+            -DpomFile=.flattened-pom.xml
         env:
           KCC_CI_USERNAME: ${{secrets.KCC_CI_USERNAME}}
           KCC_CI_PASSWORD: ${{secrets.KCC_CI_PASSWORD}}
