@@ -183,7 +183,7 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>exec-maven-plugin</artifactId>
-                    <version>1.6.0</version>
+                    <version>3.6.2</version>
                 </plugin>
                 <!-- for building Docker images: https://github.com/fabric8io/docker-maven-plugin -->
                 <plugin>
